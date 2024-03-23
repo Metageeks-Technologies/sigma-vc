@@ -38,19 +38,7 @@ const ListProject = () => {
 
   const listProject = (e: any) => {
     e.preventDefault();
-    console.log({
-      name: formData.name,
-      amountToRaise: formData.amountToRaise,
-      totalTokenSupply: formData.totalTokenSupply,
-      minimumBuy: formData.minimumBuy,
-      maximumBuy: formData.maximumBuy,
-      vesting: formData.vesting,
-      receiverAddress: formData.receiverAddress,
-      chain,
-      type,
-      startDate,
-      endDate,
-    });
+
     //` ${constant.DB_URL}/projects/createProject`
     axios
       .post("http://localhost:3000/api/project", {

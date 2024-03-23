@@ -5,6 +5,9 @@ import constants from "@/utils/constants";
 import { ethers } from "ethers";
 import axios from "axios";
 import type { IProject } from "@/types/project";
+import { useAppDispatch } from "@/redux/hooks";
+import { setBuyProject } from "@/redux/features/ui/slice";
+import { setSelectedProject } from "@/redux/features/ui/slice";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -37,9 +40,7 @@ const TokenDetails: React.FC<IProject> = (project) => {
             <div className="text-xs leading-4 text-zinc-400">Sellers</div>
           </div>
           <div className="flex flex-col items-start py-2 pr-20 pl-4 text-center shadow-sm bg-neutral-900 max-md:pr-5">
-            <div className="text-sm font-bold leading-6 text-white">
-              {"chalim"}
-            </div>
+            <div className="text-sm font-bold leading-6 text-white">{"0"}</div>
             <div className="text-xs leading-4 text-zinc-400">To claim</div>
           </div>
         </div>
@@ -49,7 +50,10 @@ const TokenDetails: React.FC<IProject> = (project) => {
           <div className="shrink-0 h-14 shadow-sm bg-neutral-900" />
           <div className="flex flex-col items-start py-2 pr-20 pl-4 whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
             <div className="text-sm font-bold leading-6 text-white">
-              {project.targetAmount}
+              ${" "}
+              {project.amountToRaise &&
+                project.totalTokenSupply &&
+                project.amountToRaise / project.totalTokenSupply}{" "}
             </div>
             <div className="text-xs leading-4 text-zinc-400">Price</div>
           </div>
@@ -60,11 +64,12 @@ const TokenDetails: React.FC<IProject> = (project) => {
             <div className="text-xs leading-4 text-zinc-400">Type</div>
           </div>
           <div className="flex flex-col items-start py-2 pr-20 pl-4 shadow-sm bg-neutral-900 max-md:pr-5">
-            <div className="text-sm font-bold leading-6 text-green-500">
-              {"current price"}{" "}
-              <span className="text-xs text-green-500">
-                {"currentPriceMultiplier"}
-              </span>
+            <div className="text-sm font-bold leading-6 text-white">
+              {/* {"current price"}{" "} */}${" "}
+              {project.amountToRaise &&
+                project.totalTokenSupply &&
+                project.amountToRaise / project.totalTokenSupply}{" "}
+              <span className="text-xs text-green-500">{"1x"}</span>
             </div>
             <div className="text-xs leading-4 text-zinc-400">Current price</div>
           </div>
@@ -85,6 +90,7 @@ interface TokenCardProps {
 }
 
 const TokenCard: React.FC<IProject> = (project) => {
+  const dispatch = useAppDispatch();
   return (
     <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
       <div className="flex flex-col grow justify-center p-6 w-full rounded-2xl bg-neutral-900 max-md:px-5 max-md:mt-8 max-md:max-w-full">
@@ -112,17 +118,23 @@ const TokenCard: React.FC<IProject> = (project) => {
           <TokenDetails {...project} />
         </div>
         <div className="flex gap-4 mt-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
-          <div className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5">
+          <button
+            onClick={() => dispatch(setBuyProject(true))}
+            className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+          >
             {/* <img
               loading="lazy"
               src={buyIcon}
               alt=""
               className="shrink-0 w-6 aspect-square"
             /> */}
-            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+            <div
+              onClick={() => dispatch(setSelectedProject(project))}
+              className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]"
+            >
               Buy
             </div>
-          </div>
+          </button>
           <div className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5">
             {/* <img
               loading="lazy"

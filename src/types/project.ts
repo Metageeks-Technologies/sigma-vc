@@ -1,13 +1,13 @@
 
 export interface IProject {
+    _id: string,
     name?: string;
-    targetAmount?: number;
-    tokenSupply?: number;
+    amountToRaise: number;
+    totalTokenSupply: number;
     minimumBuy?: number;
     maximumBuy?: number;
     vesting?: number;
-    amountRaised?: number;
-    totalRaised?: number;
+    totalRaised: number;
     receiverAddress?: string;
     publicKey?: string;
     privateKey?: string;
