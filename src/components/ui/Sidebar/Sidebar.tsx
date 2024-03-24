@@ -1,16 +1,18 @@
 import * as React from "react";
 import NavItem from "./NavItem";
 import type { NavItemProps } from "./NavItem";
-
+import Link from "next/link";
 const Sidebar: React.FC = () => {
   return (
     <div className="flex gap-0 mx-auto h-full">
       <aside className="flex flex-col  justify-between items-center px-5 pt-6 pb-20 shadow-sm bg-neutral-950">
-        <img
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-          alt="Logo"
-          className="w-10 aspect-square"
-        />
+        <Link href={"http://localhost:3000"}>
+          <img
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+            alt="Logo"
+            className="w-10 aspect-square"
+          />
+        </Link>
         <img
           src="https://cdn.builder.io/api/v1/image/assets/TEMP/fae2159bedf9bb1cad963b3d164e5db81958febfbe60d5877300f309c6988c72?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
           alt="Avatar"

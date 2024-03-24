@@ -92,7 +92,7 @@ interface TokenCardProps {
 const TokenCard: React.FC<IProject> = (project) => {
   const dispatch = useAppDispatch();
   return (
-    <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
+    <div className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full">
       <div className="flex flex-col grow justify-center p-6 w-full rounded-2xl bg-neutral-900 max-md:px-5 max-md:mt-8 max-md:max-w-full">
         <div className="flex gap-4 justify-between w-full max-md:flex-wrap max-md:max-w-full">
           <div className="flex gap-2 text-base font-bold leading-7 text-zinc-400">
@@ -122,12 +122,14 @@ const TokenCard: React.FC<IProject> = (project) => {
             onClick={() => dispatch(setBuyProject(true))}
             className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
           >
-            {/* <img
+            <img
               loading="lazy"
-              src={buyIcon}
-              alt=""
+              src={
+                "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+              }
+              alt="buy"
               className="shrink-0 w-6 aspect-square"
-            /> */}
+            />
             <div
               onClick={() => dispatch(setSelectedProject(project))}
               className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]"
@@ -136,12 +138,14 @@ const TokenCard: React.FC<IProject> = (project) => {
             </div>
           </button>
           <div className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5">
-            {/* <img
+            <img
               loading="lazy"
-              src={sellIcon}
+              src={
+                "https://cdn.builder.io/api/v1/image/assets/TEMP/dde09064ee70b3d8a0b1d91082b2391197bf1d7eec5f878cf20c9de744670058?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+              }
               alt=""
               className="shrink-0 w-6 aspect-square"
-            /> */}
+            />
             <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
               Sell
             </div>
@@ -187,7 +191,7 @@ function Listing() {
   const length = projects.length;
   return (
     <div>
-      <div className="flex gap-5 max-md:flex-col max-md:gap-0">
+      <div className="flex flex-wrap gap-5 max-md:flex-col max-md:gap-0">
         {projects.map((tokenCard, index) => (
           <TokenCard key={index} {...tokenCard} />
         ))}
@@ -213,8 +217,7 @@ const tokenCardsData = [
       currentPrice: "$0.21",
       currentPriceMultiplier: "1x",
     },
-    buyIcon:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+    buyIcon: "",
     sellIcon:
       "https://cdn.builder.io/api/v1/image/assets/TEMP/dde09064ee70b3d8a0b1d91082b2391197bf1d7eec5f878cf20c9de744670058?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
   },
@@ -234,7 +237,6 @@ const tokenCardsData = [
     },
     buyIcon:
       "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    sellIcon:
-      "https://cdn.builder.io/api/v1/image/assets/TEMP/dde09064ee70b3d8a0b1d91082b2391197bf1d7eec5f878cf20c9de744670058?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+    sellIcon: "",
   },
 ];

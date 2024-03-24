@@ -2,6 +2,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
 import { setBuyProject, setSelectedProject } from "@/redux/features/ui/slice";
+import { useAppSelector } from "@/redux/hooks";
+import { useContractData } from "@/utils/hooks";
+import { getAddressByNetwork } from "@/utils/helper";
+import { addInvestment } from "@/utils/apiCalls";
 import {
   tokenABI,
   USDCAddresses,
@@ -15,95 +19,63 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
 import {
   useAccount,
   useReadContract,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
-import axios from "axios";
-
-import { useAppSelector } from "@/redux/hooks";
-import { describe } from "node:test";
 
 const BuyProject = () => {
   const dispatch = useAppDispatch();
   const { data: hash, isPending, writeContract } = useWriteContract();
-  const [address, setAddress] = useState<string | undefined>();
-  const [chainName, setChainName] = useState<string | undefined>();
-  const { address: accountAddress, chain: chain } = useAccount();
-  const [balance, setBalance] = useState("");
-  const [symbolState, setSymbolState] = useState("");
-  const [amount, setAmount] = useState(0);
-
-  const { walletAddress } = useAppSelector((state) => state.user);
-  const [addressType, setAddressType] = useState("USDT");
+  const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const { address: accountAddress, chain } = useAccount();
   const project = useAppSelector((state) => state.uiState.selectedProject);
 
-  function getAddressByNetwork(
-    network: string,
-    addressType: string[][]
-  ): string | undefined {
-    const entry = addressType.find(([key]) => key === network);
-    return entry?.[1];
-  }
-  //   function getUSDTAddressByNetwork(network: string): string | undefined {
-  //     const entry = USDTAddresses.find(([key]) => key === network);
-  //     return entry?.[1];
-  //   }
+  const [symbolState, setSymbolState] = useState("");
+  const [chainName, setChainName] = useState<string>("");
+  const [balance, setBalance] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [addressType, setAddressType] = useState("USDT");
 
-  //   function getUSDCAddressByNetwork(network: string): string | undefined {
-  //     const entry = USDCAddresses.find(([key]) => key === network);
-  //     return entry?.[1];
-  //   }
   const addressName = addressType === "USDT" ? USDTAddresses : USDCAddresses;
 
-  const { data: tokenBalance } = useReadContract({
-    abi: tokenABI.abi,
-    // @ts-expect-error: Object is possibly 'null'.
-    address: getAddressByNetwork(chainName, addressName),
-    functionName: "balanceOf",
-    // @ts-expect-error: Object is possibly 'null'.
-    args: [address],
-  });
-
-  const { data: symbol } = useReadContract({
-    abi: tokenABI.abi,
-    // @ts-expect-error: Object is possibly 'null'.
-    address: getAddressByNetwork(chainName, addressName),
-    functionName: "symbol",
-  });
-
-  const { data: decimals } = useReadContract({
-    abi: tokenABI.abi,
-    // @ts-expect-error: Object is possibly 'null'.
-    address: getAddressByNetwork(chainName, addressName),
-    functionName: "decimals",
-  });
-
-  const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+  const { tokenBalance, symbol, decimals } = useContractData(
+    chainName,
+    addressName,
+    accountAddress as string
+  );
 
   useEffect(() => {
     if (tokenBalance && decimals)
       setBalance((tokenBalance / BigInt(10 ** decimals)).toString());
     if (symbol) setSymbolState(symbol);
-    setAddress(accountAddress);
-    setChainName(chain?.name);
+    setChainName(chain?.name || "");
   }, [accountAddress, tokenBalance, chain, addressType]);
 
+  useEffect(() => {
+    const investment = async () => {
+      if (isSuccess) {
+        await addInvestment({
+          investorAddress: accountAddress,
+          investedAmount: amount,
+          projectID: project?._id || "",
+        });
+        dispatch(setBuyProject(false));
+        dispatch(setSelectedProject(null));
+      }
+    };
+    investment();
+  }, [isSuccess]);
+
   const transaction = async () => {
+    console.log("clicked");
     if (!decimals || !chainName || !addressName) return;
-    const contractAdd = getAddressByNetwork(chainName, addressName);
-    if (!contractAdd) return;
-    console.log("clicker the buy");
-    await writeContract({
+    writeContract({
       abi: tokenABI.abi,
       // @ts-expect-error: Object is possibly 'null'.
-      address: contractAdd,
+      address: getAddressByNetwork(chainName, addressName),
       functionName: "transfer",
       args: [
         // @ts-expect-error: Object is possibly 'null'.
@@ -111,37 +83,6 @@ const BuyProject = () => {
         BigInt(amount * 10 ** decimals),
       ],
     });
-
-    // dispatch(setBuyProject(false));
-    // dispatch(setSelectedProject(null));
-  };
-
-  useEffect(() => {
-    const temp = async () => {
-      if (isConfirmed) {
-        console.log("adding investemnt");
-        await addInvestment();
-      } else {
-        console.log("cant invest");
-      }
-    };
-    temp();
-  }, [isConfirmed]);
-
-  const addInvestment = async () => {
-    axios
-      .post("http://localhost:3000/api/investment", {
-        investorAddress: accountAddress,
-        investedAmount: amount,
-        projectID: project?._id || "",
-      })
-      .then((response) => {
-        console.log(response);
-        alert("Project listed successfully");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   return (
@@ -245,19 +186,6 @@ const BuyProject = () => {
             <div className="text-xl text-white max-md:max-w-full">Pay In</div>
             <div className="flex gap-4 mt-5 max-md:flex-wrap">
               <div className="flex gap-2 justify-center text-sm leading-6 text-white whitespace-nowrap rounded-xl bg-neutral-900">
-                {/* <div className="flex gap-2">
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/c48c5b6e3a5e1ffc61b926c6c74c25dd397974ee2263fbab85dd59d0b49569b7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-                  className="shrink-0 w-6 aspect-square"
-                />
-                <div>BSC</div>
-              </div>
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5d0dfbaa5483eea4306ca6f4ca549536d6c67cf39ee7ee00799e3c8347fb56a9?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-                className="shrink-0 my-auto w-4 aspect-square"
-              /> */}
                 <Select value={addressType} onValueChange={setAddressType}>
                   <SelectTrigger className="w-[140px] mt-1 border-gray-600 bg-gray-800 text-white p-3">
                     <SelectValue placeholder="USDT" />
@@ -300,7 +228,7 @@ const BuyProject = () => {
               onClick={transaction}
               className="justify-center items-center px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"
             >
-              {isPending ? "Processing..." : "Buy"}
+              {isLoading || isPending ? "Processing..." : "Buy"}
             </button>
           </div>
         </div>
