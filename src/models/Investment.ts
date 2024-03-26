@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Project from "./Projects";
+
 
 const investment = new mongoose.Schema(
     {

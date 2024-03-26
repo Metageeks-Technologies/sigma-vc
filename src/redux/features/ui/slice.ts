@@ -6,12 +6,14 @@ type TInitialState = {
     isLaunchApp: boolean;
     isBuyProject: boolean;
     selectedProject: IProject | null;
+    isSellProject: boolean;
 };
 
 const initialState: TInitialState = {
     isLaunchApp: false,
     isBuyProject: false,
-    selectedProject: null
+    selectedProject: null,
+    isSellProject: false,
 };
 
 export const uiSlice = createSlice({
@@ -27,10 +29,13 @@ export const uiSlice = createSlice({
         setSelectedProject: (state, action: PayloadAction<null | IProject>) => {
             state.selectedProject = action.payload;
         },
+        setSellPrice: (state, action: PayloadAction<boolean>) => {
+            state.isSellProject = action.payload;
+        },
     },
 });
 
-export const { setLaunchApp, setBuyProject, setSelectedProject } =
+export const { setLaunchApp, setBuyProject, setSelectedProject, setSellPrice } =
     uiSlice.actions;
 
 export default uiSlice.reducer;

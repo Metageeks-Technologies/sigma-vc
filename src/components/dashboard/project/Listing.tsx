@@ -6,8 +6,9 @@ import { ethers } from "ethers";
 import axios from "axios";
 import type { IProject } from "@/types/project";
 import { useAppDispatch } from "@/redux/hooks";
-import { setBuyProject } from "@/redux/features/ui/slice";
+import { setBuyProject, setSellPrice } from "@/redux/features/ui/slice";
 import { setSelectedProject } from "@/redux/features/ui/slice";
+import Link from "next/link";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -102,13 +103,13 @@ const TokenCard: React.FC<IProject> = (project) => {
               alt=""
               className="shrink-0 self-start w-8 aspect-square"
             /> */}
-            <div>
+            <Link href={`/dashboard/project/${project._id}`}>
               {project.name || "chain"}
               <br />
               <span className="text-sm font-medium leading-6 text-zinc-400">
                 {project.chain || "subchian"}
               </span>
-            </div>
+            </Link>
           </div>
           <div className="my-auto text-sm leading-6 text-pink-500">
             {project.status || "status"}
@@ -137,7 +138,10 @@ const TokenCard: React.FC<IProject> = (project) => {
               Buy
             </div>
           </button>
-          <div className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5">
+          <button
+            onClick={() => dispatch(setSellPrice(true))}
+            className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+          >
             <img
               loading="lazy"
               src={
@@ -146,10 +150,13 @@ const TokenCard: React.FC<IProject> = (project) => {
               alt=""
               className="shrink-0 w-6 aspect-square"
             />
-            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+            <div
+              onClick={() => dispatch(setSelectedProject(project))}
+              className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]"
+            >
               Sell
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>
