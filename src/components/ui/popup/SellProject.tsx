@@ -3,15 +3,21 @@ import { setSellPrice } from "@/redux/features/ui/slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useState } from "react";
 import { sellStack } from "@/utils/apiCalls";
+import { setSelectedProject } from "@/redux/features/ui/slice";
 
 const SellProject = () => {
   const dispatch = useAppDispatch();
   const project = useAppSelector((state) => state.uiState.selectedProject);
   const [amount, setAmount] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSell = async () => {
+    setIsProcessing(true);
     await sellStack({ askAmount: amount, projectID: project?._id || "" });
+    setIsProcessing(false);
     setAmount(0);
+    dispatch(setSellPrice(false));
+    dispatch(setSelectedProject(project));
   };
 
   return (
@@ -42,7 +48,7 @@ const SellProject = () => {
                     <div className="flex gap-2">
                       <img
                         loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/f06eb16de46074635e0da65184d5f8d24350a6c4d5e511f6529a320dba1f151a?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                        src={project.logo}
                         className="shrink-0 my-auto w-8 aspect-square"
                       />
                       <div className="flex flex-col">
@@ -60,8 +66,9 @@ const SellProject = () => {
                             ${" "}
                             {project.amountToRaise &&
                               project.totalTokenSupply &&
-                              project.amountToRaise /
-                                project.totalTokenSupply}{" "}
+                              (
+                                project.amountToRaise / project.totalTokenSupply
+                              ).toFixed(2)}{" "}
                           </div>
                         </div>
                       </div>
@@ -80,7 +87,9 @@ const SellProject = () => {
                         ${" "}
                         {project.amountToRaise &&
                           project.totalTokenSupply &&
-                          project.amountToRaise / project.totalTokenSupply}{" "}
+                          (
+                            project.amountToRaise / project.totalTokenSupply
+                          ).toFixed(2)}{" "}
                       </div>
                       <div className="text-sm font-medium leading-6 text-green-500">
                         1x
@@ -100,7 +109,7 @@ const SellProject = () => {
                         {project.totalTokenSupply}
                       </div>
                       <div className="my-auto text-xs leading-4 text-zinc-400">
-                        LINK
+                        {project.symbol}
                       </div>
                     </div>
                   </div>
@@ -128,7 +137,7 @@ const SellProject = () => {
               onClick={handleSell}
               className="justify-center items-center w-full px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"
             >
-              {false ? "Processing..." : "Sell"}
+              {isProcessing ? "Processing..." : "Sell"}
             </button>
           </div>
         </div>

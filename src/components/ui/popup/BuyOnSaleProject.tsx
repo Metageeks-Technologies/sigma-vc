@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { setBuyProject, setSelectedProject } from "@/redux/features/ui/slice";
+import {
+  setBuyOnSaleProject,
+  setBuyProject,
+  setSelectedProject,
+} from "@/redux/features/ui/slice";
 import { useAppSelector } from "@/redux/hooks";
 import { useContractData } from "@/utils/hooks";
 import { getAddressByNetwork } from "@/utils/helper";
-import { addInvestment } from "@/utils/apiCalls";
+import { modifyInvestment } from "@/utils/apiCalls";
 import {
   tokenABI,
   USDCAddresses,
@@ -26,11 +30,17 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 
-const BuyProject = () => {
+type tableData = {
+  projectName: string;
+  askAmount: number;
+  tokenCount: number;
+  investorAddress: string;
+};
+
+const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
   const dispatch = useAppDispatch();
   const { data: hash, isPending, writeContract } = useWriteContract();
   const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
-
   const { address: accountAddress, chain } = useAccount();
   const project = useAppSelector((state) => state.uiState.selectedProject);
 
@@ -58,13 +68,13 @@ const BuyProject = () => {
   useEffect(() => {
     const investment = async () => {
       if (isSuccess) {
-        await addInvestment({
+        await modifyInvestment({
           investorAddress: accountAddress,
-          investedAmount: amount,
+          askAmount: 0,
+          saleStatus: false,
           projectID: project?._id || "",
-          symbolType: symbolState,
         });
-        dispatch(setBuyProject(false));
+        dispatch(setBuyOnSaleProject(false));
         dispatch(setSelectedProject(null));
       }
     };
@@ -81,8 +91,8 @@ const BuyProject = () => {
       functionName: "transfer",
       args: [
         // @ts-expect-error: Object is possibly 'null'.
-        getAddressByNetwork(chainName, MultiSenderAddress),
-        BigInt(amount * 10 ** decimals),
+        tableData.investorAddress,
+        BigInt(tableData.askAmount * 10 ** decimals),
       ],
     });
   };
@@ -96,7 +106,7 @@ const BuyProject = () => {
               Buy
               <br />
             </div>
-            <button onClick={() => dispatch(setBuyProject(false))}>
+            <button onClick={() => dispatch(setBuyOnSaleProject(false))}>
               <img
                 loading="lazy"
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/140ac067d56c5885222bf298146f2a7505a185f61ce57a61090f7445e433a519?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
@@ -115,13 +125,13 @@ const BuyProject = () => {
                     <div className="flex gap-2">
                       <img
                         loading="lazy"
-                        src={project.logo}
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/f06eb16de46074635e0da65184d5f8d24350a6c4d5e511f6529a320dba1f151a?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
                         className="shrink-0 my-auto w-8 aspect-square"
                       />
                       <div className="flex flex-col">
                         <div className="flex gap-1 font-bold text-white whitespace-nowrap">
                           <div className="text-base leading-6">
-                            {project.name || ""}
+                            {tableData.projectName}
                           </div>
                           {/* <div className="text-sm leading-6">(LINK)</div> */}
                         </div>
@@ -151,16 +161,11 @@ const BuyProject = () => {
                   <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
-                        ${" "}
-                        {project.amountToRaise &&
-                          project.totalTokenSupply &&
-                          (
-                            project.amountToRaise / project.totalTokenSupply
-                          ).toFixed(2)}{" "}
+                        $ {tableData.askAmount}
                       </div>
-                      <div className="text-sm font-medium leading-6 text-green-500">
+                      {/* <div className="text-sm font-medium leading-6 text-green-500">
                         1x
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -173,10 +178,10 @@ const BuyProject = () => {
                   <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
-                        {project.totalTokenSupply}
+                        {tableData.tokenCount}
                       </div>
                       <div className="my-auto text-xs leading-4 text-zinc-400">
-                        {project.symbol}
+                        LINK
                       </div>
                     </div>
                   </div>
@@ -184,9 +189,9 @@ const BuyProject = () => {
               </div>
             </div>
           </div>
-          <div className="self-center mt-3 text-sm font-bold leading-6 text-transparent text-center bg-clip-text bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+          {/* <div className="self-center mt-3 text-sm font-bold leading-6 text-transparent text-center bg-clip-text bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
             More Details
-          </div>
+          </div> */}
           <div className="flex flex-col px-4 mt-7 w-full font-bold max-md:max-w-full">
             <div className="text-xl text-white max-md:max-w-full">Pay In</div>
             <div className="flex gap-4 mt-5 max-md:flex-wrap">
@@ -214,13 +219,13 @@ const BuyProject = () => {
                 </div>
               </div>
             </div>
-            <div className="flex gap-5 justify-center px-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
+            {/* <div className="flex gap-5 justify-center px-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
                 placeholder="Enter Amount"
-                className=" text-gray-900 bg-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="flex-auto text-lg text-black"
               />
               <button
                 onClick={() => setAmount(Number(balance))}
@@ -228,7 +233,7 @@ const BuyProject = () => {
               >
                 MAX
               </button>
-            </div>
+            </div> */}
             <button
               onClick={transaction}
               className="justify-center items-center px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"
@@ -242,4 +247,4 @@ const BuyProject = () => {
   );
 };
 
-export default BuyProject;
+export default BuyOnSaleProject;

@@ -8,7 +8,7 @@ import type { IProject } from "@/types/project";
 import { useAppDispatch } from "@/redux/hooks";
 import { setBuyProject, setSellPrice } from "@/redux/features/ui/slice";
 import { setSelectedProject } from "@/redux/features/ui/slice";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -54,7 +54,9 @@ const TokenDetails: React.FC<IProject> = (project) => {
               ${" "}
               {project.amountToRaise &&
                 project.totalTokenSupply &&
-                project.amountToRaise / project.totalTokenSupply}{" "}
+                (project.amountToRaise / project.totalTokenSupply).toFixed(
+                  2
+                )}{" "}
             </div>
             <div className="text-xs leading-4 text-zinc-400">Price</div>
           </div>
@@ -69,7 +71,9 @@ const TokenDetails: React.FC<IProject> = (project) => {
               {/* {"current price"}{" "} */}${" "}
               {project.amountToRaise &&
                 project.totalTokenSupply &&
-                project.amountToRaise / project.totalTokenSupply}{" "}
+                (project.amountToRaise / project.totalTokenSupply).toFixed(
+                  2
+                )}{" "}
               <span className="text-xs text-green-500">{"1x"}</span>
             </div>
             <div className="text-xs leading-4 text-zinc-400">Current price</div>
@@ -92,24 +96,47 @@ interface TokenCardProps {
 
 const TokenCard: React.FC<IProject> = (project) => {
   const dispatch = useAppDispatch();
+  const handleClick = () => {
+    dispatch(setSelectedProject(project));
+  };
+
+  const handleSellClick = (e: React.MouseEvent, project: IProject) => {
+    e.stopPropagation();
+    dispatch(setSellPrice(true));
+    dispatch(setSelectedProject(project));
+  };
+  const handleBuyClick = (e: React.MouseEvent, project: IProject) => {
+    e.stopPropagation();
+    dispatch(setBuyProject(true));
+    dispatch(setSelectedProject(project));
+  };
+
+  const router = useRouter();
+  const handleButtonClick = (id: string) => {
+    router.push(`/dashboard/project/${id}`);
+  };
+
   return (
-    <div className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full">
+    <button
+      onClick={() => handleButtonClick(project._id)}
+      className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full"
+    >
       <div className="flex flex-col grow justify-center p-6 w-full rounded-2xl bg-neutral-900 max-md:px-5 max-md:mt-8 max-md:max-w-full">
         <div className="flex gap-4 justify-between w-full max-md:flex-wrap max-md:max-w-full">
           <div className="flex gap-2 text-base font-bold leading-7 text-zinc-400">
-            {/* <img
+            <img
               loading="lazy"
-              src={icon}
+              src={project.logo || ""}
               alt=""
               className="shrink-0 self-start w-8 aspect-square"
-            /> */}
-            <Link href={`/dashboard/project/${project._id}`}>
+            />
+            <div onClick={handleClick}>
               {project.name || "chain"}
               <br />
               <span className="text-sm font-medium leading-6 text-zinc-400">
                 {project.chain || "subchian"}
               </span>
-            </Link>
+            </div>
           </div>
           <div className="my-auto text-sm leading-6 text-pink-500">
             {project.status || "status"}
@@ -120,7 +147,7 @@ const TokenCard: React.FC<IProject> = (project) => {
         </div>
         <div className="flex gap-4 mt-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
           <button
-            onClick={() => dispatch(setBuyProject(true))}
+            onClick={(e) => handleBuyClick(e, project)}
             className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
           >
             <img
@@ -131,15 +158,12 @@ const TokenCard: React.FC<IProject> = (project) => {
               alt="buy"
               className="shrink-0 w-6 aspect-square"
             />
-            <div
-              onClick={() => dispatch(setSelectedProject(project))}
-              className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]"
-            >
+            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
               Buy
             </div>
           </button>
           <button
-            onClick={() => dispatch(setSellPrice(true))}
+            onClick={(e) => handleSellClick(e, project)}
             className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
           >
             <img
@@ -150,16 +174,13 @@ const TokenCard: React.FC<IProject> = (project) => {
               alt=""
               className="shrink-0 w-6 aspect-square"
             />
-            <div
-              onClick={() => dispatch(setSelectedProject(project))}
-              className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]"
-            >
+            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
               Sell
             </div>
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
@@ -186,7 +207,7 @@ function Listing() {
 
     const getProjects = async () => {
       //         `${constants.DB_URL}/projects/getAllProjects`
-      const result = await axios.get("http://localhost:3000/api/project");
+      const result = await axios.get("/api/project");
       setProjects(result.data.projects);
       console.log(result, "projects");
     };

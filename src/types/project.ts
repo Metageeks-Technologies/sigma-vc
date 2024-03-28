@@ -2,6 +2,8 @@
 export interface IProject {
     _id: string,
     name?: string;
+    logo: string;
+    symbol: string
     amountToRaise: number;
     totalTokenSupply: number;
     minimumBuy?: number;
@@ -20,5 +22,7 @@ export interface IProject {
     tokenAddress?: string;
     numberOfBuyer: number;
     numberOfSeller: number;
+    fundRaisedInUSDT: number;
+    fundRaisedInUSDC: number;
 }
 

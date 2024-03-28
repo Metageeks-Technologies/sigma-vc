@@ -6,7 +6,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="flex gap-0 mx-auto h-full">
       <aside className="flex flex-col  justify-between items-center px-5 pt-6 pb-20 shadow-sm bg-neutral-950">
-        <Link href={"http://localhost:3000"}>
+        <Link href={"/"}>
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
             alt="Logo"
@@ -54,14 +54,14 @@ const navItems: NavItemProps[] = [
     label: "Dashboard",
     link: "/dashboard",
   },
+  // {
+  //   icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+  //   label: "Portfolio",
+  //   link: "/dashboard/portfolio",
+  // },
   {
     icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    label: "Portfolio",
-    link: "/dashboard/portfolio",
-  },
-  {
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    label: "Project",
+    label: "Projects",
     link: "/dashboard/project",
   },
   {
@@ -69,16 +69,16 @@ const navItems: NavItemProps[] = [
     label: "Explore",
     link: "/dashboard/explore",
   },
-  {
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    label: "My Listings",
-    link: "/dashboard/my-listings",
-  },
-  {
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    label: "Offers",
-    link: "/dashboard/offers",
-  },
+  // {
+  //   icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+  //   label: "My Listings",
+  //   link: "/dashboard/my-listings",
+  // },
+  // {
+  //   icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+  //   label: "Offers",
+  //   link: "/dashboard/offers",
+  // },
   {
     icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
     label: "Create Listing",

@@ -22,3 +22,21 @@ export const GET = async (request: NextRequest, { params }: Params) => {
         throw new Error("Failed to fetch posts!");
     }
 };
+
+export const PATCH = async (request: NextRequest, { params }: Params) => {
+    try {
+        const body = await request.json();
+
+        connectToDb();
+        const project = await Project.findByIdAndUpdate(params.id, body, { new: true });
+
+        return NextResponse.json({
+            success: true,
+            investment: project,
+        }, { status: 200 });
+
+    } catch (err) {
+        console.log(err);
+        throw new Error("Failed to fetch posts!");
+    }
+};

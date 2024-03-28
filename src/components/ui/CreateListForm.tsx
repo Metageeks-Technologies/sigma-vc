@@ -22,6 +22,8 @@ const ListProject = () => {
     maximumBuy: "",
     vesting: "",
     receiverAddress: "",
+    logo: "",
+    symbol: "",
   });
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -39,10 +41,27 @@ const ListProject = () => {
   const listProject = (e: any) => {
     e.preventDefault();
 
+    console.log({
+      name: formData.name,
+      logo: formData.logo,
+      symbol: formData.symbol,
+      amountToRaise: formData.amountToRaise,
+      totalTokenSupply: formData.totalTokenSupply,
+      minimumBuy: formData.minimumBuy,
+      maximumBuy: formData.maximumBuy,
+      vesting: formData.vesting,
+      receiverAddress: formData.receiverAddress,
+      chain,
+      type,
+      startDate,
+      endDate,
+    });
     //` ${constant.DB_URL}/projects/createProject`
     axios
-      .post("http://localhost:3000/api/project", {
+      .post("/api/project", {
         name: formData.name,
+        logo: formData.logo,
+        symbol: formData.symbol,
         amountToRaise: formData.amountToRaise,
         totalTokenSupply: formData.totalTokenSupply,
         minimumBuy: formData.minimumBuy,
@@ -83,6 +102,38 @@ const ListProject = () => {
               name="name"
               id="name"
               value={formData.name}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="logo"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Logo:
+            </label>
+            <input
+              type="text"
+              name="logo"
+              id="logo"
+              value={formData.logo}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="logo"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Symbol:
+            </label>
+            <input
+              type="text"
+              name="symbol"
+              id="symbol"
+              value={formData.symbol}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
             />
@@ -193,7 +244,7 @@ const ListProject = () => {
             </label>
             <Select value={type} onValueChange={setType}>
               <SelectTrigger className="w-full mt-1  bg-gray-800 text-white p-3">
-                <SelectValue placeholder="Theme" />
+                <SelectValue placeholder="Select Type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="ICO">ICO</SelectItem>
@@ -211,7 +262,7 @@ const ListProject = () => {
             </label>
             <Select value={chain} onValueChange={setChain}>
               <SelectTrigger className="w-full mt-1 border-gray-600 bg-gray-800 text-white p-3">
-                <SelectValue placeholder="Theme" />
+                <SelectValue placeholder="Select Chain" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="BSC">BSC</SelectItem>

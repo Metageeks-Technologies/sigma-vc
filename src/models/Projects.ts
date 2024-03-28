@@ -4,6 +4,12 @@ const project = new mongoose.Schema(
         name: {
             type: String,
         },
+        logo: {
+            type: String,
+        },
+        symbol: {
+            type: String,
+        },
         amountToRaise: {
             type: Number,
         },
@@ -21,6 +27,14 @@ const project = new mongoose.Schema(
         },
 
         totalRaised: {
+            type: Number,
+            default: 0,
+        },
+        fundRaisedInUSDT: {
+            type: Number,
+            default: 0,
+        },
+        fundRaisedInUSDC: {
             type: Number,
             default: 0,
         },
@@ -50,10 +64,12 @@ const project = new mongoose.Schema(
             default: "BSC",
         },
         numberOfBuyer: {
-            type: Number
+            type: Number,
+            default: 0,
         },
         numberOfSeller: {
-            type: Number
+            type: Number,
+            default: 0,
         },
         type: {
             type: String,
@@ -70,6 +86,8 @@ const project = new mongoose.Schema(
             type: String,
             default: "0x0x0000000000000000000000000000000000000000",
         },
+
+
     },
     { timestamps: true }
 );

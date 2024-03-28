@@ -12,6 +12,7 @@ export const MultiSenderAddress = [
 ];
 
 
+
 export const tokenABI = {
     abi: [
         {
@@ -625,6 +626,115 @@ export const tokenABI = {
                 },
             ],
             name: "transferOwnership",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+    ],
+} as const;
+
+export const multiSenderABI = {
+    abi: [
+        { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+        {
+            inputs: [{ internalType: "address", name: "target", type: "address" }],
+            name: "AddressEmptyCode",
+            type: "error",
+        },
+        {
+            inputs: [{ internalType: "address", name: "account", type: "address" }],
+            name: "AddressInsufficientBalance",
+            type: "error",
+        },
+        { inputs: [], name: "FailedInnerCall", type: "error" },
+        { inputs: [], name: "NoTokenAvailable", type: "error" },
+        {
+            inputs: [{ internalType: "address", name: "owner", type: "address" }],
+            name: "OwnableInvalidOwner",
+            type: "error",
+        },
+        {
+            inputs: [{ internalType: "address", name: "account", type: "address" }],
+            name: "OwnableUnauthorizedAccount",
+            type: "error",
+        },
+        {
+            inputs: [{ internalType: "address", name: "token", type: "address" }],
+            name: "SafeERC20FailedOperation",
+            type: "error",
+        },
+        { inputs: [], name: "SendLimit", type: "error" },
+        { inputs: [], name: "ZeroAddress", type: "error" },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: true,
+                    internalType: "address",
+                    name: "previousOwner",
+                    type: "address",
+                },
+                {
+                    indexed: true,
+                    internalType: "address",
+                    name: "newOwner",
+                    type: "address",
+                },
+            ],
+            name: "OwnershipTransferred",
+            type: "event",
+        },
+        {
+            anonymous: false,
+            inputs: [
+                {
+                    indexed: false,
+                    internalType: "uint256",
+                    name: "amount",
+                    type: "uint256",
+                },
+            ],
+            name: "WithdrawToken",
+            type: "event",
+        },
+        {
+            inputs: [],
+            name: "owner",
+            outputs: [{ internalType: "address", name: "", type: "address" }],
+            stateMutability: "view",
+            type: "function",
+        },
+        {
+            inputs: [],
+            name: "renounceOwnership",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+        {
+            inputs: [
+                { internalType: "contract IERC20", name: "_token", type: "address" },
+                { internalType: "address[]", name: "_accounts", type: "address[]" },
+                { internalType: "uint256[]", name: "_amounts", type: "uint256[]" },
+            ],
+            name: "sendToken",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+        {
+            inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+            name: "transferOwnership",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function",
+        },
+        {
+            inputs: [
+                { internalType: "contract IERC20", name: "_token", type: "address" },
+                { internalType: "uint256", name: "amount", type: "uint256" },
+            ],
+            name: "withdrawTokenBalance",
             outputs: [],
             stateMutability: "nonpayable",
             type: "function",

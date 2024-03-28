@@ -13,22 +13,16 @@ const Header = () => {
         />
         <div className="flex gap-5 my-auto max-md:flex-wrap">
           <div className="grow">About</div>
-          <div>NFT</div>
-          <div>Plans & Pricing</div>
-          <div>Services</div>
+
           <div>Portfolio</div>
           <div>Team</div>
           <div>Contact</div>
         </div>
         <div className="flex gap-2">
-          <div className="justify-center px-5 py-4 rounded-lg border border-solid border-stone-500">
-            Interest Form
-          </div>
-          <div className="justify-center px-5 py-4 whitespace-nowrap rounded-lg border border-solid border-stone-500">
-            Docs
-          </div>
           {/* <ConnectWalletBtn /> */}
-          <ConnectButton />
+          <div className=" flex justify-center items-center">
+            <ConnectButton />
+          </div>
         </div>
       </div>
     </div>

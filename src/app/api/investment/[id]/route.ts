@@ -1,6 +1,7 @@
 import Investment from "@/models/Investment";
 import { connectToDb } from "@/lib/connectDb";
 import { NextResponse } from "next/server";
+import Project from "@/models/Projects";
 import type { NextRequest } from "next/server";
 
 type Params = {
@@ -16,6 +17,9 @@ export const PATCH = async (request: NextRequest, { params }: Params) => {
 
         connectToDb();
         const investment = await Investment.findOneAndUpdate({ projectID: params.id }, { askAmount, saleStatus: true }, { new: true });
+        const project = await Project.findById(params.id);
+        project.numberOfSeller += 1;
+        await project.save();
 
         return NextResponse.json({
             success: true,
