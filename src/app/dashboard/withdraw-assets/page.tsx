@@ -2,7 +2,7 @@
 import { IProject } from "@/types/project";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import WithdrawButton from "./components/Button";
+import WithdrawButton from "@/components/WithdrawButton";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 
 const WithdrawAssets = () => {
@@ -23,11 +23,12 @@ const WithdrawAssets = () => {
   }, []);
 
   return (
-    <>
-      <h1 className="flex justify-center items-center text-4xl font-bold text-black mb-6 mt-2">
+    <div className=" justify-start ">
+      <h2 className="w-full p-8 text-4xl font-bold leading-10 text-white max-md:max-w-full">
         Withdraw Assets
-      </h1>
-      <div className="bg-black p-8 rounded-lg max-w-2xl mx-auto my-10">
+      </h2>
+
+      <div className="bg-neutral-900 p-8 rounded-lg max-w-2xl m-8">
         {projects.map((project, i) => (
           <div key={i} className="flex justify-between items-center mb-4 p-6">
             <div className="flex-grow">
@@ -59,14 +60,8 @@ const WithdrawAssets = () => {
             </div>
           </div>
         ))}
-        {/* <button
-          onClick={withdrawAssets}
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none m-2"
-        >
-          Withdraw USDT
-        </button> */}
       </div>
-    </>
+    </div>
   );
 };
 

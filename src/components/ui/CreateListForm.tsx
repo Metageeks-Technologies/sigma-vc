@@ -83,14 +83,14 @@ const ListProject = () => {
   };
 
   return (
-    <>
+    <div className="w-full">
       {/* <ConnectButton /> */}
-      <h1 className="flex items-center justify-center text-4xl font-bold text-black mb-6 mt-2">
-        List Project
-      </h1>
-      <div className="bg-black p-8 rounded-lg max-w-2xl mx-auto my-10 relative">
-        <form className="space-y-6">
-          <div>
+      <h2 className="w-full p-8 text-4xl font-bold leading-10 text-white max-md:max-w-full">
+        Create List
+      </h2>
+      <div className="bg-neutral-900 w-full p-8 rounded-lg max-w-2xl m-8 relative">
+        <form className="space-y-6 w-full ">
+          <div className="">
             <label
               htmlFor="name"
               className="block text-sm font-medium text-gray-300"
@@ -106,7 +106,7 @@ const ListProject = () => {
               className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
             />
           </div>
-          <div>
+          <div className="">
             <label
               htmlFor="logo"
               className="block text-sm font-medium text-gray-300"
@@ -307,7 +307,7 @@ const ListProject = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 

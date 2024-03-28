@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface SocialIconProps {
   src: string;
@@ -22,14 +23,8 @@ const Header: React.FC = () => (
       ))}
     </div>
     <div className="flex flex-col justify-center px-4 py-3 text-sm font-bold leading-6 text-white whitespace-nowrap rounded-xl bg-neutral-900">
-      <div className="flex gap-2">
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/c48c5b6e3a5e1ffc61b926c6c74c25dd397974ee2263fbab85dd59d0b49569b7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-          alt="BSC icon"
-          className="shrink-0 w-6 aspect-square"
-        />
-        <div>BSC</div>
+      <div className=" flex justify-center items-center">
+        <ConnectButton />
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ import { AppProvider } from "@/redux/provider";
 import { Web3Providers } from "./Web3Providers";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Web3Providers>
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            <ProtectedRoute>{children}</ProtectedRoute>
+          </AppProvider>
         </Web3Providers>
       </body>
     </html>

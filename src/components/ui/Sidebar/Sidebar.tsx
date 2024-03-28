@@ -1,8 +1,13 @@
+"use client";
 import * as React from "react";
 import NavItem from "./NavItem";
 import type { NavItemProps } from "./NavItem";
 import Link from "next/link";
+import { useAppSelector } from "@/redux/hooks";
 const Sidebar: React.FC = () => {
+  const { isAdmin } = useAppSelector((state) => state.user);
+
+  const navArray = isAdmin ? [...navItems, ...adminNavItems] : navItems;
   return (
     <div className="flex gap-0 mx-auto h-full">
       <aside className="flex flex-col  justify-between items-center px-5 pt-6 pb-20 shadow-sm bg-neutral-950">
@@ -33,7 +38,7 @@ const Sidebar: React.FC = () => {
             <div className="flex-auto">Dashboard</div>
           </div>
         </div> */}
-        {navItems.map((item) => (
+        {navArray.map((item) => (
           <NavItem
             key={item.label}
             icon={item.icon}
@@ -45,8 +50,25 @@ const Sidebar: React.FC = () => {
     </div>
   );
 };
-
 export default Sidebar;
+
+const adminNavItems: NavItemProps[] = [
+  {
+    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+    label: "Create Listing",
+    link: "/dashboard/create-list",
+  },
+  {
+    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2a15415a290cb12d0ed5aaeb2c403d4dda5301873212ffdbf98be7865ac13c12?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+    label: "Multi Send",
+    link: "/dashboard/multisend",
+  },
+  {
+    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
+    label: "Withdraw Assets",
+    link: "/dashboard/withdraw-assets",
+  },
+];
 
 const navItems: NavItemProps[] = [
   {
@@ -79,9 +101,4 @@ const navItems: NavItemProps[] = [
   //   label: "Offers",
   //   link: "/dashboard/offers",
   // },
-  {
-    icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/89884b77994a6d75b7ce2f6e3d09bc829c3bb2b286f7cf635a4590499ee32bae?apiKey=caf73ded90744adfa0fe2d98abed61c0&",
-    label: "Create Listing",
-    link: "/dashboard/create-list",
-  },
 ];

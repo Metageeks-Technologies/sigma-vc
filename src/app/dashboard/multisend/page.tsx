@@ -110,12 +110,11 @@ const MultiSendForm = () => {
   }, [isSuccess]);
 
   return (
-    <>
-      {/* <ConnectButton /> */}
-      <h1 className="flex items-center justify-center text-4xl font-bold text-black mb-6 mt-2">
+    <div>
+      <h2 className="w-full p-8 text-4xl font-bold leading-10 text-white max-md:max-w-full">
         Multisend
-      </h1>
-      <div className="bg-black rounded-lg shadow-lg max-w-lg mx-auto my-10 p-4">
+      </h2>
+      <div className=" bg-neutral-900 rounded-lg shadow-lg max-w-lg m-9 p-4">
         <div className="mb-2">
           <label
             htmlFor="name"
@@ -193,7 +192,7 @@ const MultiSendForm = () => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

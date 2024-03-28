@@ -6,6 +6,8 @@ type TInitialState = {
   error: null | string;
   walletAddress: null | string;
   walletConnectedBy: string;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
 };
 
 const initialState: TInitialState = {
@@ -13,6 +15,8 @@ const initialState: TInitialState = {
   error: null,
   walletAddress: null,
   walletConnectedBy: "",
+  isAuthenticated: false,
+  isAdmin: false,
 };
 
 export const userSlice = createSlice({
@@ -31,10 +35,16 @@ export const userSlice = createSlice({
     setWalletConnectedBy: (state, action: PayloadAction<string>) => {
       state.walletConnectedBy = action.payload;
     },
+    setISAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+    },
+    setIsAdmin: (state, action: PayloadAction<boolean>) => {
+      state.isAdmin = action.payload;
+    },
   },
 });
 
-export const { setLoading, setError, setWalletAddress, setWalletConnectedBy } =
+export const { setLoading, setError, setWalletAddress, setWalletConnectedBy, setISAuthenticated, setIsAdmin } =
   userSlice.actions;
 
 export default userSlice.reducer;

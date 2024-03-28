@@ -10,7 +10,7 @@ const page = () => {
     (state) => state.uiState
   );
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 min-h-screen">
       <Listing />
       {isBuyProject && <BuyProject />}
       {isSellProject && <SellProject />}
