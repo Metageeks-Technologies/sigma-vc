@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import Project from "@/models/Projects";
 import Investment from "@/models/Investment";
 import { connectToDb } from "@/lib/connectDb";
