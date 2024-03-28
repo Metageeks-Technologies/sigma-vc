@@ -1,9 +1,9 @@
 "use client";
+import WithdrawButton from "@/components/WithdrawButton";
 import { IProject } from "@/types/project";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import WithdrawButton from "@/components/WithdrawButton";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useAccount } from "wagmi";
 
 const WithdrawAssets = () => {
   const [projects, setProjects] = useState<IProject[]>([]);

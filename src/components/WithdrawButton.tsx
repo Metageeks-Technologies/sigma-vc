@@ -68,7 +68,7 @@ const WithdrawButton = ({
 
   return (
     <button
-      onClick={() => withdrawAssets()}
+      onClick={withdrawAssets}
       className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none m-2"
     >
       {isLoading || isPending ? "Withdrawing" : `Withdraw ${WithdrawingIn}`}
