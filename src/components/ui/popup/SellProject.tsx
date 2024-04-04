@@ -48,7 +48,10 @@ const SellProject = () => {
                     <div className="flex gap-2">
                       <img
                         loading="lazy"
-                        src={project.logo}
+                        src={
+                          project.logo ||
+                          "https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                        }
                         className="shrink-0 my-auto w-12 aspect-square"
                       />
                       <div className="flex flex-col">

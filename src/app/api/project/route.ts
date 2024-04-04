@@ -5,9 +5,12 @@ import type { NextRequest } from "next/server";
 
 export const GET = async (request: NextRequest) => {
     try {
-
+        const { searchParams } = new URL(request.url);
+        const status = searchParams.get("status");
+        const query = (status === "ALL" || !status) ? {} : { status };
+        console.log(status, query);
         connectToDb();
-        const projects = await Project.find();
+        const projects = await Project.find(query);
         return NextResponse.json({
             success: true,
             projects,

@@ -99,6 +99,7 @@ const page = () => {
                 ).toFixed(2)}{" "}
             </p>
           </div>
+
           <div className="flex flex-col items-start py-2 pr-20 pl-4 text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
             <div className="text-sm font-bold leading-6 text-white">
               {currProject?.numberOfBuyer || 0}

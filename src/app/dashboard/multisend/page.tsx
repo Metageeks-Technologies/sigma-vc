@@ -114,7 +114,7 @@ const MultiSendForm = () => {
       <h2 className="w-full p-8 text-4xl font-bold leading-10 text-white max-md:max-w-full">
         Multisend
       </h2>
-      <div className=" bg-neutral-900 rounded-lg shadow-lg max-w-lg m-9 p-4">
+      <div className=" bg-neutral-900 rounded-lg shadow-lg max-w-[60%] m-9 p-4">
         <div className="mb-2">
           <label
             htmlFor="name"

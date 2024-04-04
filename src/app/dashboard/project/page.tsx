@@ -10,10 +10,11 @@ const page = () => {
   const { isBuyProject, isSellProject } = useAppSelector(
     (state) => state.uiState
   );
+  const [filterStatus, setFilterStatus] = React.useState("ALL");
   return (
     <div className="px-4 py-6 min-h-screen">
-      <Header />
-      <Listing />
+      <Header setFilterStatus={setFilterStatus} filterStatus={filterStatus} />
+      <Listing filterStatus={filterStatus} />
       {isBuyProject && <BuyProject />}
       {isSellProject && <SellProject />}
     </div>

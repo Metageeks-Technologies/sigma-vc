@@ -123,6 +123,7 @@ const TokenCard = ({
 
   const router = useRouter();
   const handleButtonClick = (id: string) => {
+    dispatch(setSelectedProject(project));
     router.push(`/dashboard/project/${id}`);
   };
 
@@ -250,7 +251,7 @@ const TokenCard = ({
   );
 };
 
-function Listing() {
+function Listing({ filterStatus }: { filterStatus: string }) {
   const [chainName, setChainName] = useState("");
   const [USDTAddress, setUSDTAddress] = useState<any>("");
   const [projects, setProjects] = useState<IProject[]>([]);
@@ -274,12 +275,6 @@ function Listing() {
       }
     };
 
-    const getProjects = async () => {
-      //         `${constants.DB_URL}/projects/getAllProjects`
-      const result = await axios.get("/api/project");
-      setProjects(result.data.projects);
-      console.log(result, "projects");
-    };
     const getInvestments = async () => {
       const result = await axios.get("/api/investment/by-user", {
         params: {
@@ -294,6 +289,21 @@ function Listing() {
     getProjects();
     getInvestments();
   }, [USDTAddress, chainName]);
+
+  const getProjects = async () => {
+    //         `${constants.DB_URL}/projects/getAllProjects`
+    const result = await axios.get("/api/project", {
+      params: {
+        status: filterStatus,
+      },
+    });
+    setProjects(result.data.projects);
+    console.log(result, "projects");
+  };
+
+  useEffect(() => {
+    getProjects();
+  }, [filterStatus]);
 
   const isInvested = (projectId: string) => {
     return userInvestments.some(
