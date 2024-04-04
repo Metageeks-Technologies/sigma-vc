@@ -49,8 +49,8 @@ const project = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["NOT LAUNCHED", "PRIVATE", "LIVE", "DISTRIBUTING", "PENDING"],
-            default: "PENDING",
+            enum: ["NOT LAUNCHED", "PRIVATE", "LIVE", "DISTRIBUTING"],
+            default: "NOT LAUNCHED",
         },
         startDate: {
             type: Date,
