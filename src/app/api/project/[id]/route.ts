@@ -15,8 +15,11 @@ export const GET = async (request: NextRequest, { params }: Params) => {
         console.log(params.id);
 
         connectToDb();
-        // const post = await Project.findById(params);
-        return NextResponse.json(params.id);
+        const project = await Project.findById(params.id);
+        return NextResponse.json({
+            success: true,
+            project,
+        });
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch posts!");

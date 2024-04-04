@@ -23,7 +23,7 @@ const SellProject = () => {
   return (
     <div className=" h-screen fixed inset-0 backdrop-blur-md w-full  flex justify-center items-center">
       {project && (
-        <div className="flex flex-col pt-4 pb-8 rounded-2xl bg-neutral-950 max-w-[484px]">
+        <div className="flex flex-col pt-4 pb-8 rounded-2xl bg-neutral-950 max-w-[600px]">
           <div className="flex gap-5 justify-between self-center w-full text-2xl font-bold leading-9 text-center text-white whitespace-nowrap max-w-[371px]">
             <div>
               Sell
@@ -41,15 +41,15 @@ const SellProject = () => {
             <div className="flex gap-5 max-md:flex-col max-md:gap-0">
               <div className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
-                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
+                  {/* <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
                     Project Name
-                  </div>
+                  </div> */}
                   <div className="flex flex-col justify-center px-4 py-2 w-full text-center shadow-sm bg-neutral-900">
                     <div className="flex gap-2">
                       <img
                         loading="lazy"
                         src={project.logo}
-                        className="shrink-0 my-auto w-8 aspect-square"
+                        className="shrink-0 my-auto w-12 aspect-square"
                       />
                       <div className="flex flex-col">
                         <div className="flex gap-1 font-bold text-white whitespace-nowrap">
@@ -59,10 +59,10 @@ const SellProject = () => {
                           {/* <div className="text-sm leading-6">(LINK)</div> */}
                         </div>
                         <div className="flex gap-0.5 text-xs leading-4">
-                          <div className="text-zinc-400">
+                          <div className="text-zinc-400 text-start">
                             Current Token Price:
                           </div>
-                          <div className="font-bold text-white">
+                          <div className="font-bold whitespace-nowrap text-white">
                             ${" "}
                             {project.amountToRaise &&
                               project.totalTokenSupply &&
@@ -78,7 +78,7 @@ const SellProject = () => {
               </div>
               <div className="flex flex-col ml-5 w-[24%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
-                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
+                  <div className="justify-center px-4 py-2 whitespace-nowrap text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
                     Current Price
                   </div>
                   <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
@@ -117,13 +117,16 @@ const SellProject = () => {
               </div>
             </div>
           </div>
-          <div className="flex gap-5 justify-center px-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
+          <div className="text-xl mx-4 mt-8 text-white max-md:max-w-full">
+            Asking amount
+          </div>
+          <div className="flex gap-5 justify-center px-4 mx-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               placeholder="Enter Amount"
-              className="flex-auto text-lg text-black"
+              className=" text-white bg-black  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             />
             {/* <button
               onClick={() => setAmount(Number(balance))}

@@ -29,7 +29,7 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <section className="flex flex-col px-5 font-bold max-w-[558px]">
+    <section className="flex mb-10 flex-col px-5 font-bold w-fit">
       <h2 className="w-full text-4xl leading-10 text-white max-md:max-w-full">
         Projects
       </h2>

@@ -25,6 +25,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
+import Link from "next/link";
 
 const BuyProject = () => {
   const dispatch = useAppDispatch();
@@ -48,8 +49,11 @@ const BuyProject = () => {
     accountAddress as string
   );
 
+  console.log(chainName, "chainName");
+  console.log(balance, "balance");
+
   useEffect(() => {
-    if (tokenBalance && decimals)
+    if (tokenBalance !== undefined && decimals)
       setBalance((tokenBalance / BigInt(10 ** decimals)).toString());
     if (symbol) setSymbolState(symbol);
     setChainName(chain?.name || "");
@@ -90,7 +94,7 @@ const BuyProject = () => {
   return (
     <div className=" h-screen fixed inset-0 backdrop-blur-md w-full  flex justify-center items-center">
       {project && (
-        <div className="flex flex-col pt-4 pb-8 rounded-2xl bg-neutral-950 max-w-[484px]">
+        <div className="flex flex-col pt-4 pb-8 rounded-2xl bg-neutral-950 max-w-[600px]">
           <div className="flex gap-5 justify-between self-center w-full text-2xl font-bold leading-9 text-center text-white whitespace-nowrap max-w-[371px]">
             <div>
               Buy
@@ -108,16 +112,17 @@ const BuyProject = () => {
             <div className="flex gap-5 max-md:flex-col max-md:gap-0">
               <div className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
-                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
+                  {/* <div className="justify-center px-4 py-2 text-sm rounded-t-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
                     Project Name
-                  </div>
-                  <div className="flex flex-col justify-center px-4 py-2 w-full text-center shadow-sm bg-neutral-900">
+                  </div> */}
+                  <div className="flex flex-col rounded-b-sm justify-center px-4 py-2 w-full text-center shadow-sm bg-neutral-900">
                     <div className="flex gap-2">
                       <img
                         loading="lazy"
                         src={project.logo}
-                        className="shrink-0 my-auto w-8 aspect-square"
+                        className="shrink-0 my-auto w-12 aspect-square"
                       />
+
                       <div className="flex flex-col">
                         <div className="flex gap-1 font-bold text-white whitespace-nowrap">
                           <div className="text-base leading-6">
@@ -126,10 +131,10 @@ const BuyProject = () => {
                           {/* <div className="text-sm leading-6">(LINK)</div> */}
                         </div>
                         <div className="flex gap-0.5 text-xs leading-4">
-                          <div className="text-zinc-400">
+                          <div className="text-zinc-400 me-3 text-start">
                             Current Token Price:
                           </div>
-                          <div className="font-bold text-white">
+                          <div className="font-bold align-bottom whitespace-nowrap text-white">
                             ${" "}
                             {project.amountToRaise &&
                               project.totalTokenSupply &&
@@ -145,10 +150,10 @@ const BuyProject = () => {
               </div>
               <div className="flex flex-col ml-5 w-[24%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
-                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
+                  <div className="justify-center whitespace-nowrap  px-4 py-2 rounded-t-sm text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
                     Asking Price
                   </div>
-                  <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
+                  <div className="flex flex-col justify-center items-start p-4 w-full rounded-b-sm text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
                         ${" "}
@@ -167,10 +172,10 @@ const BuyProject = () => {
               </div>
               <div className="flex flex-col ml-5 w-[31%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
-                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
+                  <div className="justify-center px-4 py-2 text-sm font-bold leading-6 rounded-t-sm text-white shadow-sm bg-neutral-900">
                     Token Amount
                   </div>
-                  <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
+                  <div className="flex flex-col justify-center items-start p-4 w-full text-center rounded-b-sm whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
                         {project.totalTokenSupply}
@@ -185,7 +190,10 @@ const BuyProject = () => {
             </div>
           </div>
           <div className="self-center mt-3 text-sm font-bold leading-6 text-transparent text-center bg-clip-text bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
-            More Details
+            <Link href={`/dashboard/project/${project._id}`}>
+              {" "}
+              More details
+            </Link>
           </div>
           <div className="flex flex-col px-4 mt-7 w-full font-bold max-md:max-w-full">
             <div className="text-xl text-white max-md:max-w-full">Pay In</div>
@@ -209,7 +217,7 @@ const BuyProject = () => {
                 <div className="my-auto text-sm text-white">
                   {chainName &&
                     addressName &&
-                    getAddressByNetwork(chainName, addressName)?.slice(0, 7)}
+                    getAddressByNetwork(chainName, addressName)?.slice(0, 30)}
                   ...
                 </div>
               </div>
@@ -220,7 +228,7 @@ const BuyProject = () => {
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
                 placeholder="Enter Amount"
-                className=" text-gray-900 bg-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className=" text-white bg-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
               <button
                 onClick={() => setAmount(Number(balance))}

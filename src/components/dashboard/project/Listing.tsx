@@ -9,6 +9,8 @@ import { useAppDispatch } from "@/redux/hooks";
 import { setBuyProject, setSellPrice } from "@/redux/features/ui/slice";
 import { setSelectedProject } from "@/redux/features/ui/slice";
 import { useRouter } from "next/navigation";
+import { Investment } from "@/types/Investment";
+import { useAppSelector } from "@/redux/hooks";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -94,7 +96,13 @@ interface TokenCardProps {
   sellIcon: string;
 }
 
-const TokenCard: React.FC<IProject> = (project) => {
+const TokenCard = ({
+  project,
+  isInvested,
+}: {
+  project: IProject;
+  isInvested: (projectId: string) => boolean;
+}) => {
   const dispatch = useAppDispatch();
   const handleClick = () => {
     dispatch(setSelectedProject(project));
@@ -126,7 +134,10 @@ const TokenCard: React.FC<IProject> = (project) => {
           <div className="flex gap-2 text-base font-bold leading-7 text-zinc-400">
             <img
               loading="lazy"
-              src={project.logo || ""}
+              src={
+                project.logo ||
+                "https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+              }
               alt=""
               className="shrink-0 self-start w-8 aspect-square"
             />
@@ -163,6 +174,7 @@ const TokenCard: React.FC<IProject> = (project) => {
             </div>
           </button>
           <button
+            disabled={!isInvested(project._id)}
             onClick={(e) => handleSellClick(e, project)}
             className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
           >
@@ -188,6 +200,9 @@ function Listing() {
   const [chainName, setChainName] = useState("");
   const [USDTAddress, setUSDTAddress] = useState<any>("");
   const [projects, setProjects] = useState<IProject[]>([]);
+  const [userInvestments, setUserInvestments] = useState<Investment[]>([]);
+
+  const { walletAddress } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const getUSDTAddress = async () => {
@@ -211,17 +226,34 @@ function Listing() {
       setProjects(result.data.projects);
       console.log(result, "projects");
     };
+    const getInvestments = async () => {
+      const result = await axios.get("/api/investment/by-user", {
+        params: {
+          user_address: walletAddress,
+        },
+      });
+      setUserInvestments(result.data.investments);
+      console.log(result, "investments");
+    };
 
     getUSDTAddress();
     getProjects();
+    getInvestments();
   }, [USDTAddress, chainName]);
 
   const length = projects.length;
+
+  const isInvested = (projectId: string) => {
+    return userInvestments.some(
+      (investment) => investment.projectID === projectId
+    );
+  };
+
   return (
     <div>
       <div className="flex flex-wrap gap-5 max-md:flex-col max-md:gap-0">
         {projects.map((tokenCard, index) => (
-          <TokenCard key={index} {...tokenCard} />
+          <TokenCard key={index} project={tokenCard} isInvested={isInvested} />
         ))}
       </div>
     </div>

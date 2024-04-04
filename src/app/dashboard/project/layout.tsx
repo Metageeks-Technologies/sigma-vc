@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Header from "@/components/dashboard/project/Header";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -11,10 +10,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="px-4 py-6 flex flex-col ">
-      <Header />
-      {children}
-    </div>
-  );
+  return <div className="px-4 py-6 flex flex-col ">{children}</div>;
 }

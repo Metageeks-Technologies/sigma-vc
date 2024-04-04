@@ -5,7 +5,7 @@ import constants from "@/utils/constants";
 import { ethers } from "ethers";
 import axios from "axios";
 import type { IProject } from "@/types/project";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setBuyProject, setSellPrice } from "@/redux/features/ui/slice";
 import { setSelectedProject } from "@/redux/features/ui/slice";
 import { useRouter } from "next/navigation";
@@ -19,11 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Investment } from "@/types/Investment";
 
 function List() {
   const [chainName, setChainName] = useState("");
   const [USDTAddress, setUSDTAddress] = useState<any>("");
   const [projects, setProjects] = useState<IProject[]>([]);
+  const [userInvestments, setUserInvestments] = useState<Investment[]>([]);
+
+  const { walletAddress } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const handleSellClick = (e: React.MouseEvent, project: IProject) => {
@@ -59,12 +63,27 @@ function List() {
       setProjects(result.data.projects);
       console.log(result, "projects");
     };
+    const getInvestments = async () => {
+      const result = await axios.get("/api/investment/by-user", {
+        params: {
+          user_address: walletAddress,
+        },
+      });
+      setUserInvestments(result.data.investments);
+      console.log(result, "investments");
+    };
 
     getUSDTAddress();
     getProjects();
+    getInvestments();
   }, [USDTAddress, chainName]);
 
-  const length = projects.length;
+  // const length = projects.length;
+  const isInvested = (projectId: string) => {
+    return userInvestments.some(
+      (investment) => investment.projectID === projectId
+    );
+  };
   return (
     <div>
       <div className="flex flex-wrap gap-5 max-md:flex-col max-md:gap-0">
@@ -91,7 +110,10 @@ function List() {
                   <div className="flex gap-2 text-base font-bold leading-7 text-zinc-400">
                     <img
                       loading="lazy"
-                      src={project.logo || ""}
+                      src={
+                        project.logo ||
+                        "https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                      }
                       alt=""
                       className="shrink-0 self-start w-8 aspect-square"
                     />
@@ -130,6 +152,7 @@ function List() {
                       </div>
                     </button>
                     <button
+                      disabled={!isInvested(project._id)}
                       onClick={(e) => handleSellClick(e, project)}
                       className="flex flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
                     >
