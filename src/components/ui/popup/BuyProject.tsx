@@ -39,6 +39,7 @@ const BuyProject = () => {
   const [chainName, setChainName] = useState<string>("");
   const [balance, setBalance] = useState("");
   const [amount, setAmount] = useState(0);
+  const [error, setError] = useState("");
   const [addressType, setAddressType] = useState("USDT");
 
   const addressName = addressType === "USDT" ? USDTAddresses : USDCAddresses;
@@ -75,7 +76,20 @@ const BuyProject = () => {
     investment();
   }, [isSuccess]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (error) setError("");
+    setAmount(Number(e.target.value));
+  };
+
   const transaction = async () => {
+    if (!amount || !project) {
+      setError("Please enter a valid amount");
+      return;
+    }
+    if (amount < project.minimumBuy || amount > project.maximumBuy) {
+      setError("Amount should be between minimum and maximum buy amount");
+      return;
+    }
     console.log("clicked");
     if (!decimals || !chainName || !addressName) return;
     writeContract({
@@ -225,11 +239,15 @@ const BuyProject = () => {
                 </div>
               </div>
             </div>
+            <div className="text-white flex font-light gap-4 mt-4">
+              <p>*Min value {project.minimumBuy}</p>
+              <p>*Max value {project.maximumBuy}</p>
+            </div>
             <div className="flex gap-5 justify-center px-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
               <input
                 type="number"
                 value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
+                onChange={handleInputChange}
                 placeholder="Enter Amount"
                 className=" text-white bg-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -240,6 +258,7 @@ const BuyProject = () => {
                 MAX
               </button>
             </div>
+            {error && <p className=" text-xs my-1 text-red-500">*{error}</p>}
             <button
               onClick={transaction}
               className="justify-center items-center px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"

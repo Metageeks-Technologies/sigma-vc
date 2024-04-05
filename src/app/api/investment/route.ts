@@ -59,8 +59,13 @@ export const PATCH = async (request: NextRequest) => {
         const body = await request.json();
         const { investorAddress, projectID, saleStatus, askAmount } = body;
 
+        console.log(investorAddress, projectID, saleStatus, askAmount);
+
         connectToDb();
-        const investment = await Investment.findOneAndUpdate({ projectID, investorAddress }, { investorAddress, saleStatus, askAmount })
+        const investment = await Investment.findOneAndUpdate({ projectID, investorAddress }, { investorAddress, saleStatus, askAmount });
+        if (!investment) {
+            throw new Error("No investment found!");
+        }
 
         return NextResponse.json({
             success: true,

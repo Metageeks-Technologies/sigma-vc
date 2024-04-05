@@ -8,10 +8,10 @@ import {
 
 export const useContractData = (chainName: string, addressName: string[][], userAddress: string) => {
     const contractAddress = getAddressByNetwork(chainName, addressName);
-    console.log(contractAddress)
+    // console.log(contractAddress)
 
 
-    console.log(contractAddress);
+    // console.log(contractAddress);
     const { data: tokenBalance } = useReadContract({
         abi: tokenABI.abi,
         // @ts-expect-error: Object is possibly 'null'.
@@ -20,7 +20,7 @@ export const useContractData = (chainName: string, addressName: string[][], user
         // @ts-expect-error: Object is possibly 'null'.
         args: [userAddress],
     });
-    console.log(tokenBalance, "tokenBalance");
+    // console.log(tokenBalance, "tokenBalance");
 
     const { data: symbol } = useReadContract({
         abi: tokenABI.abi,
@@ -28,7 +28,7 @@ export const useContractData = (chainName: string, addressName: string[][], user
         address: contractAddress,
         functionName: "symbol",
     });
-    console.log(symbol, "symbol");
+    // console.log(symbol, "symbol");
 
     const { data: decimals } = useReadContract({
         abi: tokenABI.abi,
@@ -36,7 +36,7 @@ export const useContractData = (chainName: string, addressName: string[][], user
         address: contractAddress,
         functionName: "decimals",
     });
-    console.log(decimals, "decimals");
+    // console.log(decimals, "decimals");
 
     return { tokenBalance, symbol, decimals };
 };

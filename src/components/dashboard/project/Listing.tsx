@@ -213,6 +213,10 @@ const TokenCard = ({
         </div>
         <div className="flex gap-4 mt-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
           <button
+            disabled={
+              project.amountToRaise === project.totalRaised ||
+              project.status !== "LIVE"
+            }
             onClick={(e) => handleBuyClick(e, project)}
             className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
           >

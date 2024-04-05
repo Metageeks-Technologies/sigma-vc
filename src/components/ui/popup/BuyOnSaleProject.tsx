@@ -35,6 +35,7 @@ type tableData = {
   askAmount: number;
   tokenCount: number;
   investorAddress: string;
+  symbol: string;
 };
 
 const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
@@ -68,14 +69,19 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
   useEffect(() => {
     const investment = async () => {
       if (isSuccess) {
-        await modifyInvestment({
-          investorAddress: accountAddress,
-          askAmount: 0,
-          saleStatus: false,
-          projectID: project?._id || "",
-        });
-        dispatch(setBuyOnSaleProject(false));
-        dispatch(setSelectedProject(null));
+        console.log("success", isSuccess);
+        try {
+          await modifyInvestment({
+            investorAddress: tableData.investorAddress,
+            askAmount: 0,
+            saleStatus: false,
+            projectID: project?._id || "",
+          });
+          dispatch(setBuyOnSaleProject(false));
+          dispatch(setSelectedProject(null));
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     investment();
@@ -84,6 +90,7 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
   const transaction = async () => {
     console.log("clicked");
     if (!decimals || !chainName || !addressName) return;
+
     writeContract({
       abi: tokenABI.abi,
       // @ts-expect-error: Object is possibly 'null'.
@@ -184,7 +191,7 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
                         {tableData.tokenCount}
                       </div>
                       <div className="my-auto text-xs leading-4 text-zinc-400">
-                        LINK
+                        {tableData.symbol}
                       </div>
                     </div>
                   </div>

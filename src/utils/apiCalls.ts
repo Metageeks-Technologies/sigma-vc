@@ -13,7 +13,7 @@ export const addInvestment = async (bodyObj: any) => {
 export const modifyInvestment = async (bodyObj: any) => {
     try {
         const response = await axios.patch("/api/investment", bodyObj);
-        console.log(response);
+        console.log(response, "response insvestment buy");
         alert("Project listed successfully");
     } catch (error) {
         console.log(error);
@@ -21,10 +21,10 @@ export const modifyInvestment = async (bodyObj: any) => {
 };
 
 export const sellStack = async (bodyObj: any) => {
-    const { projectID, askAmount } = bodyObj;
+    const { projectID, askAmount, userAddress } = bodyObj;
     console.log(projectID, askAmount)
     try {
-        const response = await axios.patch(`/api/investment/${projectID}`, { askAmount });
+        const response = await axios.patch(`/api/investment/${projectID}`, { askAmount, userAddress });
         console.log(response);
 
     } catch (error) {

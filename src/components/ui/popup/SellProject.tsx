@@ -1,19 +1,38 @@
 "use client";
 import { setSellPrice } from "@/redux/features/ui/slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { sellStack } from "@/utils/apiCalls";
 import { setSelectedProject } from "@/redux/features/ui/slice";
+import { stat } from "fs";
+import { Investment } from "@/types/Investment";
 
 const SellProject = () => {
   const dispatch = useAppDispatch();
   const project = useAppSelector((state) => state.uiState.selectedProject);
+  const { walletAddress } = useAppSelector((state) => state.user);
   const [amount, setAmount] = useState(0);
+  const [investment, setInvestment] = useState<Investment | null>();
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    const fetchInvestment = async () => {
+      const response = await fetch(
+        `/api/investment/by-project-with-user?user_address=${walletAddress}&project_id=${project?._id}`
+      );
+      const data = await response.json();
+      setInvestment(data.investment);
+    };
+    fetchInvestment();
+  }, []);
 
   const handleSell = async () => {
     setIsProcessing(true);
-    await sellStack({ askAmount: amount, projectID: project?._id || "" });
+    await sellStack({
+      askAmount: amount,
+      projectID: project?._id || "",
+      userAddress: walletAddress,
+    });
     setIsProcessing(false);
     setAmount(0);
     dispatch(setSellPrice(false));
@@ -121,6 +140,10 @@ const SellProject = () => {
             </div>
           </div>
           <div className="text-xl mx-4 mt-8 text-white max-md:max-w-full">
+            Bought Price : {investment ? investment.investedAmount : "-"}
+          </div>
+
+          <div className="text-xl mx-4 mt-8 text-white max-md:max-w-full">
             Asking amount
           </div>
           <div className="flex gap-5 justify-center px-4 mx-4 py-5 mt-4 rounded-2xl bg-neutral-900 leading-[160%] max-md:flex-wrap max-md:max-w-full">
@@ -140,10 +163,15 @@ const SellProject = () => {
           </div>
           <div className="px-4 py-5 mt-4 ">
             <button
+              disabled={isProcessing || investment?.saleStatus}
               onClick={handleSell}
               className="justify-center items-center w-full px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"
             >
-              {isProcessing ? "Processing..." : "Sell"}
+              {isProcessing
+                ? "Processing..."
+                : investment?.saleStatus
+                ? "Already listed"
+                : "Sell"}
             </button>
           </div>
         </div>

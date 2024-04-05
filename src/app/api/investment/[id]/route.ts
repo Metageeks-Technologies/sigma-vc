@@ -13,10 +13,13 @@ type Params = {
 export const PATCH = async (request: NextRequest, { params }: Params) => {
     try {
         const body = await request.json();
-        const { askAmount } = body;
+        const { askAmount, userAddress } = body;
 
         connectToDb();
-        const investment = await Investment.findOneAndUpdate({ projectID: params.id }, { askAmount, saleStatus: true }, { new: true });
+        const investment = await Investment.findOneAndUpdate({ projectID: params.id, investorAddress: userAddress }, { askAmount, saleStatus: true }, { new: true });
+        if (!investment) {
+            throw new Error("Failed to update investment!");
+        }
         const project = await Project.findById(params.id);
         project.numberOfSeller += 1;
         await project.save();

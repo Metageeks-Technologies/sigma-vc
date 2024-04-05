@@ -18,6 +18,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { setBuyOnSaleProject } from "@/redux/features/ui/slice";
 import BuyOnSaleProject from "@/components/ui/popup/BuyOnSaleProject";
 import { IProject } from "@/types/project";
+import { symlink } from "fs";
 
 const page = () => {
   const [investments, setInvestments] = useState<Investment[]>([]);
@@ -27,6 +28,7 @@ const page = () => {
     askAmount: 0,
     tokenCount: 0,
     investorAddress: "",
+    symbol: "",
   });
   const { id } = useParams();
   const { isBuyOnSaleProject } = useAppSelector((state) => state.uiState);
@@ -59,13 +61,15 @@ const page = () => {
     projectName: string,
     askAmount: number,
     tokenCount: number,
-    investorAddress: string
+    investorAddress: string,
+    symbol: string
   ) => {
     setTableData({
       projectName,
       askAmount,
       tokenCount,
       investorAddress,
+      symbol,
     });
     dispatch(setBuyOnSaleProject(true));
   };
@@ -90,13 +94,14 @@ const page = () => {
           <div>
             <p>total token supply</p>
             <p>
-              ${" "}
+              {/* ${" "}
               {currProject &&
                 currProject.amountToRaise &&
                 currProject.totalTokenSupply &&
                 (
                   currProject.amountToRaise / currProject.totalTokenSupply
-                ).toFixed(2)}{" "}
+                ).toFixed(2)}{" "} */}
+              {currProject?.totalTokenSupply || 0}
             </p>
           </div>
 
@@ -162,7 +167,8 @@ const page = () => {
                               currProject?.name || "",
                               data.askAmount,
                               tokenCount,
-                              data.investorAddress
+                              data.investorAddress,
+                              currProject?.symbol || ""
                             )
                           }
                         >

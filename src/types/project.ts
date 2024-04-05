@@ -6,8 +6,8 @@ export interface IProject {
     symbol: string
     amountToRaise: number;
     totalTokenSupply: number;
-    minimumBuy?: number;
-    maximumBuy?: number;
+    minimumBuy: number;
+    maximumBuy: number;
     vesting?: number;
     totalRaised: number;
     receiverAddress?: string;
