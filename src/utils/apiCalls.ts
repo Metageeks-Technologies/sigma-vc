@@ -32,3 +32,24 @@ export const sellStack = async (bodyObj: any) => {
         console.log(error);
     }
 };
+
+
+export const uploadLogo = async (logo: File, uuid: string) => {
+
+    try {
+        const { data } = await axios.post(`/api/upload-s3`, { fileName: logo.name, uuid });
+        console.log(data);
+        if (data) {
+            await axios.put(data.url, logo, {
+                headers: {
+                    "Content-Type": logo.type,
+                },
+            });
+        }
+        return data.s3key as string;
+    } catch (error) {
+        const e = error as any;
+        console.log(e);
+        return "";
+    }
+}

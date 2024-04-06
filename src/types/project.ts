@@ -1,6 +1,7 @@
 
 export interface IProject {
     _id: string,
+    uuid: string;
     name?: string;
     logo: string;
     symbol: string

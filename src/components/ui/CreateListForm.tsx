@@ -12,6 +12,9 @@ import {
 import { DatePicker } from "./DatePicker";
 import { Editor } from "@tinymce/tinymce-react";
 import { Amarante } from "next/font/google";
+import { Accept, useDropzone } from "react-dropzone";
+import shortUUID from "short-uuid";
+import { uploadLogo } from "@/utils/apiCalls";
 // import ConnectButton from "../components/connectButton";
 
 const ListProject = () => {
@@ -34,6 +37,7 @@ const ListProject = () => {
   const [socialMedia, setSocialMedia] = useState([{ platform: "", link: "" }]);
   const [partners, setPartners] = useState([{ name: "", logo: "" }]);
   const [loading, setLoading] = useState(false);
+  const [logo, setLogo] = useState<File | null>();
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -68,78 +72,78 @@ const ListProject = () => {
     setPartners(values);
   };
 
-  const listProject = (e: any) => {
+  const listProject = async (e: any) => {
     e.preventDefault();
 
-    console.log({
-      name: formData.name,
-      logo: formData.logo,
-      symbol: formData.symbol,
-      amountToRaise: formData.amountToRaise,
-      totalTokenSupply: formData.totalTokenSupply,
-      minimumBuy: formData.minimumBuy,
-      maximumBuy: formData.maximumBuy,
-      vesting: formData.vesting,
-      receiverAddress: formData.receiverAddress,
-      chain,
-      type,
-    });
+    if (!logo) return alert("Please upload logo");
+    const uuid = shortUUID.generate();
     setLoading(true);
-    //` ${constant.DB_URL}/projects/createProject`
-    axios
-      .post("/api/project", {
-        name: formData.name,
-        logo: formData.logo,
-        symbol: formData.symbol,
-        amountToRaise: formData.amountToRaise,
-        totalTokenSupply: formData.totalTokenSupply,
-        minimumBuy: formData.minimumBuy,
-        maximumBuy: formData.maximumBuy,
-        vesting: formData.vesting,
-        receiverAddress: formData.receiverAddress,
-        socialMedia,
-        partners,
-        overview: overView,
-        chain,
-        type,
-        startDate,
-        endDate,
-        listingTokenPrice: (
-          Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
-        ).toFixed(4),
-        currentTokenPrice: (
-          Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
-        ).toFixed(4),
-      })
-      .then((response) => {
-        console.log(response);
 
-        setFormData({
-          name: "",
-          amountToRaise: "",
-          totalTokenSupply: "",
-          minimumBuy: "",
-          maximumBuy: "",
-          vesting: "",
-          receiverAddress: "",
-          logo: "",
-          symbol: "",
+    try {
+      const key = await uploadLogo(logo, uuid);
+      console.log(key);
+      if (key) {
+        const response = await axios.post("/api/project", {
+          name: formData.name,
+          logo: "https://sigma-vc.s3.amazonaws.com/" + key,
+          symbol: formData.symbol,
+          amountToRaise: formData.amountToRaise,
+          totalTokenSupply: formData.totalTokenSupply,
+          minimumBuy: formData.minimumBuy,
+          maximumBuy: formData.maximumBuy,
+          vesting: formData.vesting,
+          receiverAddress: formData.receiverAddress,
+          socialMedia,
+          partners,
+          overview: overView,
+          chain,
+          type,
+          startDate,
+          endDate,
+          uuid,
+          listingTokenPrice: (
+            Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
+          ).toFixed(4),
+          currentTokenPrice: (
+            Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
+          ).toFixed(4),
         });
-
-        setType("");
-        setChain("");
-        setOverView("");
-        setSocialMedia([{ platform: "", link: "" }]);
-        setPartners([{ name: "", logo: "" }]);
-
-        alert("Project listed successfully");
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log(error);
+      }
+      setFormData({
+        name: "",
+        amountToRaise: "",
+        totalTokenSupply: "",
+        minimumBuy: "",
+        maximumBuy: "",
+        vesting: "",
+        receiverAddress: "",
+        logo: "",
+        symbol: "",
       });
+
+      setType("");
+      setChain("");
+      setOverView("");
+      setSocialMedia([{ platform: "", link: "" }]);
+      setPartners([{ name: "", logo: "" }]);
+      setLogo(null);
+      setLoading(false);
+      alert("Project listed successfully");
+    } catch (error) {
+      setLoading(false);
+    }
+    //` ${constant.DB_URL}/projects/createProject`
   };
+
+  const {
+    getRootProps: getBannerRootProps,
+    getInputProps: getBannerInputProps,
+  } = useDropzone({
+    accept: "image/*" as any,
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length) setLogo(acceptedFiles[0]);
+    },
+  });
 
   return (
     <div className="w-full">
@@ -165,7 +169,7 @@ const ListProject = () => {
               className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
             />
           </div>
-          <div className="">
+          {/* <div className="">
             <label
               htmlFor="logo"
               className="block text-sm font-medium text-gray-300"
@@ -180,6 +184,32 @@ const ListProject = () => {
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
             />
+          </div> */}
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm mb-1 font-medium text-gray-300"
+            >
+              Logo:
+            </label>
+            <div
+              {...getBannerRootProps()}
+              className="mb-4  px-3 py-3 text-white bg-gray-800 rounded "
+            >
+              <input {...getBannerInputProps()} />
+              <p>Drag 'n' drop banner image here, or click to select image</p>
+            </div>
+            {logo && (
+              <div className=" flex gap-2 flex-wrap mt-3">
+                <div
+                  onClick={() => setLogo(null)}
+                  title="Click to remove"
+                  className="text-gray-800 text-center flex  cursor-pointer bg-white rounded-[2rem] p-2 px-3"
+                >
+                  <span className="">{logo.name}</span>
+                </div>
+              </div>
+            )}
           </div>
           <div>
             <label

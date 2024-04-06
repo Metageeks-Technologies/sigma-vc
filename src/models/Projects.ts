@@ -4,6 +4,9 @@ const project = new mongoose.Schema(
         name: {
             type: String,
         },
+        uuid: {
+            type: String,
+        },
         logo: {
             type: String,
         },
