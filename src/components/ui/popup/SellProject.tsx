@@ -6,6 +6,7 @@ import { sellStack } from "@/utils/apiCalls";
 import { setSelectedProject } from "@/redux/features/ui/slice";
 import { stat } from "fs";
 import { Investment } from "@/types/Investment";
+import { cn } from "@/lib/utils";
 
 const SellProject = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ const SellProject = () => {
         `/api/investment/by-project-with-user?user_address=${walletAddress}&project_id=${project?._id}`
       );
       const data = await response.json();
+      // console.log(data.investment, "data");
       setInvestment(data.investment);
     };
     fetchInvestment();
@@ -39,6 +41,11 @@ const SellProject = () => {
     dispatch(setSelectedProject(project));
   };
 
+  const growthMultiple = project
+    ? Number((project.currentTokenPrice / project.listingTokenPrice).toFixed(2))
+    : 1;
+
+  // console.log(investment, "investment");
   return (
     <div className=" h-screen fixed inset-0 backdrop-blur-md w-full  flex justify-center items-center">
       {project && (
@@ -85,12 +92,7 @@ const SellProject = () => {
                             Current Token Price:
                           </div>
                           <div className="font-bold whitespace-nowrap text-white">
-                            ${" "}
-                            {project.amountToRaise &&
-                              project.totalTokenSupply &&
-                              (
-                                project.amountToRaise / project.totalTokenSupply
-                              ).toFixed(2)}{" "}
+                            $ {project.currentTokenPrice}
                           </div>
                         </div>
                       </div>
@@ -106,16 +108,16 @@ const SellProject = () => {
                   <div className="flex flex-col justify-center items-start p-4 w-full text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
-                        ${" "}
-                        {project.amountToRaise &&
-                          project.totalTokenSupply &&
-                          (
-                            project.amountToRaise / project.totalTokenSupply
-                          ).toFixed(2)}{" "}
+                        $ {project.currentTokenPrice}
                       </div>
-                      <div className="text-sm font-medium leading-6 text-green-500">
-                        1x
-                      </div>
+                      <span
+                        className={cn(
+                          "text-xs  ms-2",
+                          growthMultiple < 1 ? "text-red-500" : "text-green-500"
+                        )}
+                      >
+                        {`${growthMultiple}x`}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -140,7 +142,7 @@ const SellProject = () => {
             </div>
           </div>
           <div className="text-xl mx-4 mt-8 text-white max-md:max-w-full">
-            Bought Price : {investment ? investment.investedAmount : "-"}
+            Bought Price : {investment ? investment.boughtAmount : "-"}
           </div>
 
           <div className="text-xl mx-4 mt-8 text-white max-md:max-w-full">

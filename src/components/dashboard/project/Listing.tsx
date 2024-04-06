@@ -18,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { current } from "@reduxjs/toolkit";
+import { cn } from "@/lib/utils";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -30,6 +32,10 @@ interface TokenDetailsProps {
 }
 
 const TokenDetails: React.FC<IProject> = (project) => {
+  const growthMultiple = Number(
+    (project.currentTokenPrice / project.listingTokenPrice).toFixed(2)
+  );
+
   return (
     <div className="flex gap-5 max-md:flex-col max-md:gap-0">
       <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
@@ -60,12 +66,7 @@ const TokenDetails: React.FC<IProject> = (project) => {
           <div className="shrink-0 h-14 shadow-sm bg-neutral-900" />
           <div className="flex flex-col items-start py-2 pr-20 pl-4 whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
             <div className="text-sm font-bold leading-6 text-white">
-              ${" "}
-              {project.amountToRaise &&
-                project.totalTokenSupply &&
-                (project.amountToRaise / project.totalTokenSupply).toFixed(
-                  2
-                )}{" "}
+              $ {project.listingTokenPrice}
             </div>
             <div className="text-xs leading-4 text-zinc-400">Price</div>
           </div>
@@ -77,13 +78,15 @@ const TokenDetails: React.FC<IProject> = (project) => {
           </div>
           <div className="flex flex-col items-start py-2 pr-20 pl-4 shadow-sm bg-neutral-900 max-md:pr-5">
             <div className="text-sm font-bold leading-6 text-white">
-              {/* {"current price"}{" "} */}${" "}
-              {project.amountToRaise &&
-                project.totalTokenSupply &&
-                (project.amountToRaise / project.totalTokenSupply).toFixed(
-                  2
-                )}{" "}
-              <span className="text-xs text-green-500">{"1x"}</span>
+              {/* {"current price"}{" "} */}$ {project.currentTokenPrice}
+              <span
+                className={cn(
+                  "text-xs  ms-2",
+                  growthMultiple < 1 ? "text-red-500" : "text-green-500"
+                )}
+              >
+                {`${growthMultiple}x`}
+              </span>
             </div>
             <div className="text-xs leading-4 text-zinc-400">Current price</div>
           </div>

@@ -13,6 +13,12 @@ const project = new mongoose.Schema(
         amountToRaise: {
             type: Number,
         },
+        currentTokenPrice: {
+            type: Number,
+        },
+        listingTokenPrice: {
+            type: Number,
+        },
         totalTokenSupply: {
             type: Number,
         },
@@ -71,6 +77,21 @@ const project = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        overview: {
+            type: String,
+        },
+        partners: [
+            {
+                name: { type: String, required: true },
+                logo: { type: String, required: true }
+            }
+        ],
+        socialMedia: [
+            {
+                platform: { type: String, required: true },
+                link: { type: String, required: true }
+            }
+        ],
         type: {
             type: String,
             enum: ["ICO", "IDO", "SEED"],

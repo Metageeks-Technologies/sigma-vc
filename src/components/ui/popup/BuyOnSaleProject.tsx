@@ -29,6 +29,7 @@ import {
   useWriteContract,
   useWaitForTransactionReceipt,
 } from "wagmi";
+import { cn } from "@/utils/cn";
 
 type tableData = {
   projectName: string;
@@ -36,6 +37,8 @@ type tableData = {
   tokenCount: number;
   investorAddress: string;
   symbol: string;
+  currentPricePerToken: number;
+  priceIncreaseTimes: number;
 };
 
 const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
@@ -73,9 +76,12 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
         try {
           await modifyInvestment({
             investorAddress: tableData.investorAddress,
+            accountAddress,
             askAmount: 0,
             saleStatus: false,
             projectID: project?._id || "",
+            projectCurrentPrice: tableData.currentPricePerToken.toFixed(4),
+            boughtAmount: tableData.askAmount,
           });
           dispatch(setBuyOnSaleProject(false));
           dispatch(setSelectedProject(null));
@@ -90,6 +96,8 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
   const transaction = async () => {
     console.log("clicked");
     if (!decimals || !chainName || !addressName) return;
+    if (tableData.askAmount > Number(balance))
+      return alert("Insufficient Balance");
 
     writeContract({
       abi: tokenABI.abi,
@@ -150,12 +158,7 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
                             Current Token Price:
                           </div>
                           <div className="font-bold text-white">
-                            ${" "}
-                            {project.amountToRaise &&
-                              project.totalTokenSupply &&
-                              (
-                                project.amountToRaise / project.totalTokenSupply
-                              ).toFixed(2)}{" "}
+                            $ {tableData.currentPricePerToken.toFixed(2)}
                           </div>
                         </div>
                       </div>
@@ -173,9 +176,18 @@ const BuyOnSaleProject = ({ tableData }: { tableData: tableData }) => {
                       <div className="text-base font-bold leading-6 text-white">
                         $ {tableData.askAmount}
                       </div>
-                      {/* <div className="text-sm font-medium leading-6 text-green-500">
-                        1x
-                      </div> */}
+                      <div className="text-sm font-medium leading-6">
+                        <span
+                          className={cn(
+                            "text-sm  ms-2",
+                            tableData.priceIncreaseTimes < 1
+                              ? "text-red-500"
+                              : "text-green-500"
+                          )}
+                        >
+                          {`${tableData.priceIncreaseTimes.toFixed(2)}x`}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

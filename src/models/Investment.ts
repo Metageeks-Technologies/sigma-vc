@@ -9,6 +9,9 @@ const investment = new mongoose.Schema(
         investedAmount: {
             type: Number,
         },
+        boughtAmount: {
+            type: Number,
+        },
         askAmount: {
             type: Number,
         },

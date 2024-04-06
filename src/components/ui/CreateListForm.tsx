@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "./DatePicker";
-
+import { Editor } from "@tinymce/tinymce-react";
+import { Amarante } from "next/font/google";
 // import ConnectButton from "../components/connectButton";
 
 const ListProject = () => {
@@ -29,6 +30,10 @@ const ListProject = () => {
   const [endDate, setEndDate] = useState<Date>();
   const [type, setType] = useState<string>();
   const [chain, setChain] = useState<string>();
+  const [overView, setOverView] = useState<string>("");
+  const [socialMedia, setSocialMedia] = useState([{ platform: "", link: "" }]);
+  const [partners, setPartners] = useState([{ name: "", logo: "" }]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,6 +41,31 @@ const ListProject = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+  };
+
+  const addSocialMedia = () => {
+    setSocialMedia([...socialMedia, { platform: "", link: "" }]);
+  };
+  const addPartners = () => {
+    setPartners([...partners, { name: "", logo: "" }]);
+  };
+  const handleSocialMediaChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const values = [...socialMedia];
+    values[index][event.target.name as "platform" | "link"] =
+      event.target.value;
+    setSocialMedia(values);
+  };
+
+  const handlePartnersChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const values = [...partners];
+    values[index][event.target.name as "name" | "logo"] = event.target.value;
+    setPartners(values);
   };
 
   const listProject = (e: any) => {
@@ -53,9 +83,8 @@ const ListProject = () => {
       receiverAddress: formData.receiverAddress,
       chain,
       type,
-      startDate,
-      endDate,
     });
+    setLoading(true);
     //` ${constant.DB_URL}/projects/createProject`
     axios
       .post("/api/project", {
@@ -68,16 +97,46 @@ const ListProject = () => {
         maximumBuy: formData.maximumBuy,
         vesting: formData.vesting,
         receiverAddress: formData.receiverAddress,
+        socialMedia,
+        partners,
+        overview: overView,
         chain,
         type,
         startDate,
         endDate,
+        listingTokenPrice: (
+          Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
+        ).toFixed(4),
+        currentTokenPrice: (
+          Number(formData.amountToRaise) / Number(formData.totalTokenSupply)
+        ).toFixed(4),
       })
       .then((response) => {
         console.log(response);
+
+        setFormData({
+          name: "",
+          amountToRaise: "",
+          totalTokenSupply: "",
+          minimumBuy: "",
+          maximumBuy: "",
+          vesting: "",
+          receiverAddress: "",
+          logo: "",
+          symbol: "",
+        });
+
+        setType("");
+        setChain("");
+        setOverView("");
+        setSocialMedia([{ platform: "", link: "" }]);
+        setPartners([{ name: "", logo: "" }]);
+
         alert("Project listed successfully");
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error);
       });
   };
@@ -270,7 +329,7 @@ const ListProject = () => {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          {/* <div>
             <label
               htmlFor="startDate"
               className="block text-sm font-medium text-gray-300"
@@ -284,18 +343,99 @@ const ListProject = () => {
               htmlFor="endDate"
               className="block text-sm font-medium text-gray-300"
             >
-              Start Date:
+              End Date:
             </label>
             <DatePicker date={endDate} setDate={setEndDate} />
+          </div> */}
+          <div>
+            <label htmlFor="title" className="block text-white mb-2">
+              Social links:
+            </label>
+            {socialMedia.map((social, index) => (
+              <div key={index} className="flex gap-5 mt-2">
+                <input
+                  type="text"
+                  name="platform"
+                  className="w-full px-3 py-2 rounded bg-gray-800 text-white"
+                  value={social.platform}
+                  onChange={(event) => handleSocialMediaChange(index, event)}
+                  placeholder="Enter platform"
+                  required
+                />
+                <input
+                  type="text"
+                  name="link"
+                  className="w-full px-3 py-2 rounded bg-gray-800 text-white "
+                  value={social.link}
+                  onChange={(event) => handleSocialMediaChange(index, event)}
+                  placeholder="Enter link"
+                  required
+                />
+              </div>
+            ))}
+            <div className="w-full  flex justify-end my-3">
+              <button className="  text-blue-600" onClick={addSocialMedia}>
+                Add More
+              </button>
+            </div>
+          </div>
+          <div>
+            <label htmlFor="title" className="block text-white mb-2">
+              Partners && investors:
+            </label>
+            {partners.map((partner, index) => (
+              <div key={index} className="flex gap-5 mt-2">
+                <input
+                  type="text"
+                  name="name"
+                  className="w-full px-3 py-2 rounded bg-gray-800 text-white"
+                  value={partner.name}
+                  onChange={(event) => handlePartnersChange(index, event)}
+                  placeholder="Enter name"
+                  required
+                />
+                <input
+                  type="text"
+                  name="logo"
+                  className="w-full px-3 py-2 rounded bg-gray-800 text-white "
+                  value={partner.logo}
+                  onChange={(event) => handlePartnersChange(index, event)}
+                  placeholder="Enter logo"
+                  required
+                />
+              </div>
+            ))}
+            <div className="w-full  flex justify-end my-3">
+              <button className="  text-blue-600" onClick={addPartners}>
+                Add More
+              </button>
+            </div>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-white mb-2">
+              Overview:
+            </label>
+            <Editor
+              onEditorChange={(content) => setOverView(content)}
+              apiKey="5ck4fbg67tr2aopfaf7zp04pl5d1z2xfvv15qu0uunww5ss5"
+              init={{
+                plugins:
+                  "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker",
+                toolbar:
+                  "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat",
+              }}
+              initialValue="Type here..."
+            />
           </div>
 
           <div className="flex justify-center">
             <button
+              disabled={loading}
               type="submit"
               onClick={listProject}
               className="px-6 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 m-2"
             >
-              List Project
+              {loading ? "Loading..." : "List Project"}
             </button>
             {/* <button
               type="submit"

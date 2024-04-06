@@ -26,6 +26,7 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const BuyProject = () => {
   const dispatch = useAppDispatch();
@@ -68,6 +69,7 @@ const BuyProject = () => {
           investedAmount: amount,
           projectID: project?._id || "",
           symbolType: symbolState,
+          boughtAmount: amount,
         });
         dispatch(setBuyProject(false));
         dispatch(setSelectedProject(null));
@@ -104,6 +106,10 @@ const BuyProject = () => {
       ],
     });
   };
+
+  const growthMultiple = project
+    ? Number((project.currentTokenPrice / project.listingTokenPrice).toFixed(2))
+    : 1;
 
   return (
     <div className=" h-screen fixed inset-0 backdrop-blur-md w-full  flex justify-center items-center">
@@ -148,17 +154,12 @@ const BuyProject = () => {
                           {/* <div className="text-sm leading-6">(LINK)</div> */}
                         </div>
                         <div className="flex gap-0.5 text-xs leading-4">
-                          <div className="text-zinc-400 me-3 text-start">
-                            Current Token Price:
+                          {/* <div className="text-zinc-400 me-3 text-start">
+                            Token Price:
                           </div>
                           <div className="font-bold align-bottom whitespace-nowrap text-white">
-                            ${" "}
-                            {project.amountToRaise &&
-                              project.totalTokenSupply &&
-                              (
-                                project.amountToRaise / project.totalTokenSupply
-                              ).toFixed(2)}{" "}
-                          </div>
+                            $ {project.listingTokenPrice}
+                          </div> */}
                         </div>
                       </div>
                     </div>
@@ -168,21 +169,21 @@ const BuyProject = () => {
               <div className="flex flex-col ml-5 w-[24%] max-md:ml-0 max-md:w-full">
                 <div className="flex flex-col grow">
                   <div className="justify-center whitespace-nowrap  px-4 py-2 rounded-t-sm text-sm font-bold leading-6 text-white shadow-sm bg-neutral-900">
-                    Asking Price
+                    Price
                   </div>
                   <div className="flex flex-col justify-center items-start p-4 w-full rounded-b-sm text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
                     <div className="flex gap-1">
                       <div className="text-base font-bold leading-6 text-white">
-                        ${" "}
-                        {project.amountToRaise &&
-                          project.totalTokenSupply &&
-                          (
-                            project.amountToRaise / project.totalTokenSupply
-                          ).toFixed(2)}{" "}
+                        $ {project.listingTokenPrice}
                       </div>
-                      <div className="text-sm font-medium leading-6 text-green-500">
-                        1x
-                      </div>
+                      <span
+                        className={cn(
+                          "text-xs  ms-2",
+                          growthMultiple < 1 ? "text-red-500" : "text-green-500"
+                        )}
+                      >
+                        {`${growthMultiple}x`}
+                      </span>
                     </div>
                   </div>
                 </div>

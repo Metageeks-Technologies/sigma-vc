@@ -11,6 +11,11 @@ export interface IProject {
     vesting?: number;
     totalRaised: number;
     receiverAddress?: string;
+    currentTokenPrice: number;
+    listingTokenPrice: number;
+    overview: string;
+    partners: { name: string, logo: string }[];
+    socialMedia: { platform: string, link: string }[];
     publicKey?: string;
     privateKey?: string;
     status?: 'NOT LAUNCHED' | 'PRIVATE' | 'LIVE' | 'DISTRIBUTING' | 'PENDING';
