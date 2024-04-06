@@ -92,7 +92,7 @@ function Dashboard() {
     };
 
     fetchUserInvestment();
-  }, []);
+  }, [walletAddress]);
 
   const totalBoughtAmount = userInvestment.reduce(
     (sum, investment) => sum + investment.boughtAmount,
