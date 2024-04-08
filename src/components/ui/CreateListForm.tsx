@@ -28,6 +28,7 @@ const ListProject = () => {
     receiverAddress: "",
     logo: "",
     symbol: "",
+    taxPercentage: "",
   });
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
@@ -92,6 +93,7 @@ const ListProject = () => {
           minimumBuy: formData.minimumBuy,
           maximumBuy: formData.maximumBuy,
           vesting: formData.vesting,
+          taxPercentage: formData.taxPercentage,
           receiverAddress: formData.receiverAddress,
           socialMedia,
           partners,
@@ -119,6 +121,7 @@ const ListProject = () => {
         receiverAddress: "",
         logo: "",
         symbol: "",
+        taxPercentage: "",
       });
 
       setType("");
@@ -304,6 +307,22 @@ const ListProject = () => {
               name="vesting"
               id="vesting"
               value={formData.vesting}
+              onChange={handleChange}
+              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500  p-3"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="taxPercentage"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Tax Percentage:
+            </label>
+            <input
+              type="text"
+              name="taxPercentage"
+              id="taxPercentage"
+              value={formData.taxPercentage}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500  p-3"
             />

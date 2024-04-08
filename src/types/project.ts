@@ -11,6 +11,7 @@ export interface IProject {
     maximumBuy: number;
     vesting?: number;
     totalRaised: number;
+    taxPercentage: number;
     receiverAddress?: string;
     currentTokenPrice: number;
     listingTokenPrice: number;

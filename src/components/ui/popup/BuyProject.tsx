@@ -63,10 +63,10 @@ const BuyProject = () => {
 
   useEffect(() => {
     const investment = async () => {
-      if (isSuccess) {
+      if (isSuccess && project) {
         await addInvestment({
           investorAddress: accountAddress,
-          investedAmount: amount,
+          investedAmount: amount * (1 - project.taxPercentage / 100),
           projectID: project?._id || "",
           symbolType: symbolState,
           boughtAmount: amount,
@@ -117,7 +117,7 @@ const BuyProject = () => {
         <div className="flex flex-col pt-4 pb-8 rounded-2xl bg-neutral-950 max-w-[600px]">
           <div className="flex gap-5 justify-between self-center w-full text-2xl font-bold leading-9 text-center text-white whitespace-nowrap max-w-[371px]">
             <div>
-              Buy
+              Invest
               <br />
             </div>
             <button onClick={() => dispatch(setBuyProject(false))}>
@@ -260,11 +260,18 @@ const BuyProject = () => {
               </button>
             </div>
             {error && <p className=" text-xs my-1 text-red-500">*{error}</p>}
+            {amount && (
+              <p className=" text-sm my-1 ms-4 text-blue-500">
+                Invested amount after the {project.taxPercentage}% tax :{" "}
+                {amount * (1 - project.taxPercentage / 100)}{" "}
+              </p>
+            )}
+
             <button
               onClick={transaction}
               className="justify-center items-center px-4 py-3 mt-8 text-lg leading-6 text-white whitespace-nowrap rounded-2xl bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)] max-md:px-5 max-md:max-w-full"
             >
-              {isLoading || isPending ? "Processing..." : "Buy"}
+              {isLoading || isPending ? "Processing..." : "Invest"}
             </button>
           </div>
         </div>

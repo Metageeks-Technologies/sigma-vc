@@ -83,6 +83,10 @@ const project = new mongoose.Schema(
         overview: {
             type: String,
         },
+        taxPercentage: {
+            type: Number,
+            default: 15,
+        },
         partners: [
             {
                 name: { type: String, required: true },

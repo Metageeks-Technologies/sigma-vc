@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { current } from "@reduxjs/toolkit";
 import { cn } from "@/lib/utils";
+import { Link } from "lucide-react";
 
 interface TokenDetailsProps {
   buyers: number;
@@ -36,6 +37,7 @@ const TokenDetails: React.FC<IProject> = (project) => {
     (project.currentTokenPrice / project.listingTokenPrice).toFixed(2)
   );
 
+  const router = useRouter();
   return (
     <div className="flex gap-5 max-md:flex-col max-md:gap-0">
       <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
@@ -215,43 +217,63 @@ const TokenCard = ({
           <TokenDetails {...project} />
         </div>
         <div className="flex gap-4 mt-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
-          <button
-            disabled={
-              project.amountToRaise === project.totalRaised ||
-              project.status !== "LIVE"
-            }
-            onClick={(e) => handleBuyClick(e, project)}
-            className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
-          >
-            <img
-              loading="lazy"
-              src={
-                "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-              }
-              alt="buy"
-              className="shrink-0 w-6 aspect-square"
-            />
-            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
-              Buy
-            </div>
-          </button>
-          <button
-            disabled={!isInvested(project._id)}
-            onClick={(e) => handleSellClick(e, project)}
-            className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
-          >
-            <img
-              loading="lazy"
-              src={
-                "https://cdn.builder.io/api/v1/image/assets/TEMP/dde09064ee70b3d8a0b1d91082b2391197bf1d7eec5f878cf20c9de744670058?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-              }
-              alt=""
-              className="shrink-0 w-6 aspect-square"
-            />
-            <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
-              Sell
-            </div>
-          </button>
+          {project.status === "LIVE" ? (
+            <>
+              <button
+                disabled={project.amountToRaise === project.totalRaised}
+                onClick={(e) => handleBuyClick(e, project)}
+                className="flex flex-1 w-full gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+              >
+                <img
+                  loading="lazy"
+                  src={
+                    "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                  }
+                  alt="buy"
+                  className="shrink-0 w-6 aspect-square"
+                />
+                <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                  Invest
+                </div>
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => router.push(`/dashboard/project/${project._id}`)}
+                className="flex w-full  flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+              >
+                <img
+                  loading="lazy"
+                  src={
+                    "https://cdn.builder.io/api/v1/image/assets/TEMP/c72cf2cf4addc19fc813fa73fe3452e8726d89303d1d8277c22f592b830a19c7?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                  }
+                  alt="buy"
+                  className="shrink-0 w-6 aspect-square"
+                />
+                <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                  Buy
+                </div>
+              </button>
+              <button
+                disabled={!isInvested(project._id)}
+                onClick={(e) => handleSellClick(e, project)}
+                className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+              >
+                <img
+                  loading="lazy"
+                  src={
+                    "https://cdn.builder.io/api/v1/image/assets/TEMP/dde09064ee70b3d8a0b1d91082b2391197bf1d7eec5f878cf20c9de744670058?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                  }
+                  alt=""
+                  className="shrink-0 w-6 aspect-square"
+                />
+                <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                  Sell
+                </div>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </button>
