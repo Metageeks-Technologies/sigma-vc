@@ -66,7 +66,9 @@ const BuyProject = () => {
       if (isSuccess && project) {
         await addInvestment({
           investorAddress: accountAddress,
-          investedAmount: amount * (1 - project.taxPercentage / 100),
+          investedAmount:
+            amount *
+            (1 - Number((Number(project.taxPercentage) / 100).toFixed(2))),
           projectID: project?._id || "",
           symbolType: symbolState,
           boughtAmount: amount,
@@ -263,7 +265,7 @@ const BuyProject = () => {
             {amount && (
               <p className=" text-sm my-1 ms-4 text-blue-500">
                 Invested amount after the {project.taxPercentage}% tax :{" "}
-                {amount * (1 - project.taxPercentage / 100)}{" "}
+                {1 - Number((Number(project.taxPercentage) / 100).toFixed(2))}{" "}
               </p>
             )}
 
