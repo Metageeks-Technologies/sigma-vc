@@ -42,7 +42,7 @@ const TokenDetails: React.FC<IProject> = (project) => {
     <div className="flex gap-5 max-md:flex-col max-md:gap-0">
       <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
         <div className="flex flex-col grow">
-          <div className="justify-center px-4 py-2 text-base font-bold leading-6 text-white shadow-sm bg-neutral-900">
+          <div className="justify-start  flex px-4 py-2 text-base font-bold leading-6 text-white shadow-sm bg-neutral-900">
             Token Details
           </div>
           <div className="flex flex-col items-start py-2 pr-20 pl-4 text-center whitespace-nowrap shadow-sm bg-neutral-900 max-md:pr-5">
@@ -150,22 +150,21 @@ const TokenCard = ({
     >
       <div className="flex flex-col grow justify-center p-6 w-full rounded-2xl bg-neutral-900 max-md:px-5 max-md:mt-8 max-md:max-w-full">
         <div className="flex gap-4 justify-between w-full max-md:flex-wrap max-md:max-w-full">
-          <div className="flex gap-2 text-base font-bold leading-7 text-zinc-400">
-            <img
-              loading="lazy"
-              src={
-                project.logo ||
-                "https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
-              }
-              alt=""
-              className="shrink-0 self-start w-8 aspect-square"
-            />
-            <div onClick={handleClick}>
-              {project.name || "chain"}
-              <br />
-              <span className="text-sm font-medium leading-6 text-zinc-400">
-                {project.chain || "subchian"}
-              </span>
+          <div className="flex justify-center text-center gap-2 text-base font-bold leading-7 text-zinc-400">
+            <div className="h-full flex justify-center items-center">
+              <img
+                loading="lazy"
+                src={
+                  project.logo ||
+                  "https://cdn.builder.io/api/v1/image/assets/TEMP/b68b0cdae57733bdd44ea3de41b7744a0a86c1750bee1107078dfa06a9bccdc0?apiKey=caf73ded90744adfa0fe2d98abed61c0&"
+                }
+                alt=""
+                className="shrink-0 self-start w-12 aspect-square"
+              />
+            </div>
+            <div className=" flex flex-col items-start" onClick={handleClick}>
+              <p className="text-white">{project.name || "chain"}</p>
+              <p>{project.chain || "subchian"}</p>
             </div>
           </div>
 
@@ -222,7 +221,7 @@ const TokenCard = ({
               <button
                 disabled={project.amountToRaise === project.totalRaised}
                 onClick={(e) => handleBuyClick(e, project)}
-                className="flex flex-1 w-full gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+                className="flex bg-gray-800 flex-1 w-full gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
               >
                 <img
                   loading="lazy"
@@ -232,7 +231,7 @@ const TokenCard = ({
                   alt="buy"
                   className="shrink-0 w-6 aspect-square"
                 />
-                <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                <div className="bg-clip-text  text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
                   Invest
                 </div>
               </button>
@@ -241,7 +240,7 @@ const TokenCard = ({
             <>
               <button
                 onClick={() => router.push(`/dashboard/project/${project._id}`)}
-                className="flex w-full  flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+                className="flex w-full bg-gray-800  flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
               >
                 <img
                   loading="lazy"
@@ -258,7 +257,7 @@ const TokenCard = ({
               <button
                 disabled={!isInvested(project._id)}
                 onClick={(e) => handleSellClick(e, project)}
-                className="flex flex-1 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
+                className="flex flex-1 bg-gray-800 gap-2 justify-center px-20 py-1 rounded-lg max-md:px-5"
               >
                 <img
                   loading="lazy"

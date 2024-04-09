@@ -29,6 +29,7 @@ function List() {
 
   const { walletAddress } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleSellClick = (e: React.MouseEvent, project: IProject) => {
     e.stopPropagation();
@@ -141,26 +142,43 @@ function List() {
                       2
                     )}{" "}
                 </TableCell>
-                <TableCell>
-                  <div className="flex">
-                    <button
-                      onClick={(e) => handleBuyClick(e, project)}
-                      className="flex flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
-                    >
-                      <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
-                        Buy
+                <TableCell className="flex justify-center items-center gap-4">
+                  {project.status === "LIVE" ? (
+                    <>
+                      <button
+                        onClick={(e) => handleBuyClick(e, project)}
+                        className="flex flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
+                      >
+                        <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                          Invest
+                        </div>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex ">
+                        <button
+                          onClick={() =>
+                            router.push(`/dashboard/project/${project._id}`)
+                          }
+                          className="flex flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
+                        >
+                          <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                            Buy
+                          </div>
+                        </button>
+                        <button
+                          disabled={!isInvested(project._id)}
+                          onClick={(e) => handleSellClick(e, project)}
+                          className="flex ml-4 flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
+                        >
+                          <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
+                            Sell
+                          </div>
+                        </button>
                       </div>
-                    </button>
-                    <button
-                      disabled={!isInvested(project._id)}
-                      onClick={(e) => handleSellClick(e, project)}
-                      className="flex flex-1 gap-2 justify-center py-1 rounded-lg max-md:px-5"
-                    >
-                      <div className="bg-clip-text text-transparent bg-[linear-gradient(86deg,#D16BA5_-14.21%,#BA83CA_15.03%,#9A9AE1_43.11%,#69BFF8_74.29%,#52CFFE_90.94%,#5FFBF1_111.44%)]">
-                        Sell
-                      </div>
-                    </button>
-                  </div>
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

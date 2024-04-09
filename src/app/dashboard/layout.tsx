@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex w-full">
+    <div className="flex  w-full min-h-screen bg-black">
       <div className="w-[25%]">
         <Sidebar />
       </div>
