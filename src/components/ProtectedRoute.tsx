@@ -8,6 +8,7 @@ import {
   setIsAdmin,
 } from "@/redux/features/user/slice";
 import { useAppDispatch } from "@/redux/hooks";
+import { setMobile } from "@/redux/features/ui/slice";
 
 const ProtectedRoute = ({
   children,
@@ -37,7 +38,12 @@ const ProtectedRoute = ({
       ) {
         dispatch(setIsAdmin(true));
       }
-      router.push("/dashboard");
+      if (window.innerWidth <= 768) {
+        router.push("/dashboard-mobile");
+        dispatch(setMobile(true));
+      } else {
+        router.push("/dashboard");
+      }
     }
   }, [accountAddress]);
 

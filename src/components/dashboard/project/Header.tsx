@@ -41,7 +41,7 @@ const Header = ({
   };
 
   return (
-    <section className="flex mb-10 flex-col px-5 font-bold w-fit">
+    <section className="flex mb-10 flex-col font-bold w-fit">
       <h2 className="w-full text-4xl leading-10 text-white max-md:max-w-full">
         Projects
       </h2>

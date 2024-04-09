@@ -149,7 +149,7 @@ const TokenCard = ({
       className="flex flex-col w-[45%] max-md:ml-0 max-md:w-full"
     >
       <div className="flex flex-col grow justify-center p-6 w-full rounded-2xl bg-neutral-900 max-md:px-5 max-md:mt-8 max-md:max-w-full">
-        <div className="flex gap-4 justify-between w-full max-md:flex-wrap max-md:max-w-full">
+        <div className="flex gap-4 px-4 justify-between w-full max-md:flex-wrap max-md:max-w-full">
           <div className="flex justify-center text-center gap-2 text-base font-bold leading-7 text-zinc-400">
             <div className="h-full flex justify-center items-center">
               <img
@@ -215,7 +215,7 @@ const TokenCard = ({
         <div className="mt-4 max-md:max-w-full">
           <TokenDetails {...project} />
         </div>
-        <div className="flex gap-4 mt-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
+        <div className="flex gap-4 mt-4 px-4 text-sm font-bold leading-6 text-center whitespace-nowrap max-md:flex-wrap">
           {project.status === "LIVE" ? (
             <>
               <button

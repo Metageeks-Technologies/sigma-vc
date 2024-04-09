@@ -21,7 +21,8 @@ const MultiSendForm = () => {
   const [isApprove, setIsApprove] = useState<boolean>(false);
 
   const [chainName, setChainName] = useState<string | undefined>();
-  const [inputAddress, setInputAddress] = useState<string>();
+  const [inputAddress, setInputAddress] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const { address: accountAddress, chain: chain } = useAccount();
   const [projects, setProjects] = useState<IProject[]>([]);
   const [investments, setInvestments] = useState<
@@ -56,6 +57,10 @@ const MultiSendForm = () => {
   //  }
 
   const multiSendApprove = () => {
+    if (!isValidAddress(inputAddress)) {
+      setError("Invalid Address");
+      return;
+    }
     console.log("Multi-send-approve called");
     writeContract({
       abi: tokenABI.abi,
@@ -72,8 +77,6 @@ const MultiSendForm = () => {
   };
 
   const multiSend = () => {
-    console.log("Multi-send called");
-
     if (!decimals) return;
     const addresses = investments.map((entry) => entry.address);
     const amounts = investments.map((entry) => entry.amount);
@@ -105,9 +108,16 @@ const MultiSendForm = () => {
       console.log(error);
     }
   };
+  const handleInputChange = (e: any) => {
+    if (error) setError("");
+    setInputAddress(e.target.value);
+  };
   useEffect(() => {
     if (isSuccess) setIsApprove(true);
   }, [isSuccess]);
+  const isValidAddress = (address: string) => {
+    return address.startsWith("0x");
+  };
 
   return (
     <div>
@@ -149,11 +159,10 @@ const MultiSendForm = () => {
             type="text"
             value={inputAddress}
             id="tokenAddress"
-            onChange={(e) => {
-              setInputAddress(e.target.value);
-            }}
+            onChange={handleInputChange}
             className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3"
           />
+          {error !== "" && <p className="text-red-500">{error}</p>}
         </div>
         <div className="flex justify-between px-2 py-4">
           <span className="text-base font-medium text-gray-300">Addresses</span>

@@ -28,7 +28,7 @@ const Header = () => {
               Dashboard
             </Link>
           )}
-          <div className=" flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <ConnectButton />
           </div>
         </div>
